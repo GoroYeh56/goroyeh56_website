@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Goro Yeh — Software Engineer & Photographer</title>
+  <meta name="description" content="Goro Yeh — Software engineer working on machine learning for autonomous driving, photographer, traveler, and dreamer."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=120%2C120&ssl=1" alt="Goro Yeh" class="nav-avatar"/>
+        <span>Goro Yeh</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#photography">Photography</a></li>
+        <li><a href="#travel">Travel</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#bookshelf">Bookshelf</a></li>
+        <li><a href="#channels">Channels</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="ml-roadmap.html" style="color:var(--gold);font-weight:500">ML Roadmap</a></li> 
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">SOFTWARE ENGINEER &amp; PHOTOGRAPHER</p>
+      <blockquote class="hero-quote">
+        "Our greatest glory is not in never failing,<br/>but in rising up every time we fail."
+      </blockquote>
+      <p class="hero-attribution">— Ralph Waldo Emerson</p>
+    </div>
+    <div class="hero-scroll">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container about-grid">
+      <div class="about-slider-wrap">
+        <div class="about-slider" id="aboutSlider">
+          <div class="slide active">
+            <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/11/DSC06261-1-scaled.jpg?resize=900%2C1200&ssl=1" alt="Goro at Brooklyn Bridge"/>
+          </div>
+          <div class="slide">
+            <img src="images/alaska.JPG" alt="Goro in Alaska"/>
+          </div>
+          <div class="slide">
+            <img src="images/deathvalley.JPG" alt="Goro in Death Valley"/>
+          </div>
+          <div class="slide">
+            <img src="images/mt-shasta.JPG" alt="Goro on Mount Shasta"/>
+          </div>
+          <div class="slide">
+            <img src="images/whitesand.jpg" alt="Goro on White Sand" style="object-position: center 25% !important;"/>
+          </div>             
+          <div class="slide">
+            <img src="images/carmel-by-the-sea.JPG" alt="Goro in Carmel by the Sea"/>
+          </div>
+          <div class="slide">
+            <img src="images/grand-canyon.jpg" alt="Goro in Grand Canyon" style="object-position: 58% center !important;"/>
+          </div>                    
+          <div class="slide">
+            <img src="images/venice-beach.jpg" alt="Goro at Venice Beach"/>
+          </div>   
+          <div class="slide">
+            <img src="images/umich-grad.JPG" alt="Goro at University of Michigan"/>
+          </div>                       
+          <div class="slide">
+            <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=900%2C900&ssl=1" alt="North Star Pilot headshot"/>
+          </div>
+        </div>
+        <button class="slider-btn prev" id="sliderPrev">&#8592;</button>
+        <button class="slider-btn next" id="sliderNext">&#8594;</button>
+        <div class="slider-dots" id="sliderDots"></div>
+        <div class="currently-working">
+          <span class="cw-label">Currently working on</span>
+          <span class="cw-value">ML for Autonomous Driving</span>
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="section-eyebrow">ABOUT ME</p>
+        <h2 class="about-title">Hi, I'm Goro!</h2>
+        <p class="about-subtitle gold">What is your North Star? ★</p>
+        <p class="about-body">A passionate <strong>dreamer</strong> living on Earth. I'm a software engineer working on <strong>machine learning</strong> in the autonomous driving space — building systems that help cars perceive and navigate the world.</p>
+        <p class="about-body">Beyond the code, I love to <strong>work out</strong>, <strong>travel the world</strong> to explore new places, and <strong>capture moments</strong> through my camera. I'm also a devoted coffee lover who aspires to find his ultimate mission in the vast universe.</p>
+        <div class="about-tags">
+          <span class="tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Machine Learning</span>
+          <span class="tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Autonomous Driving</span>
+          <span class="tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M20.45 20.45A9 9 0 0 0 3.55 3.55"/><path d="M20.45 3.55a9 9 0 0 1 0 12.73"/></svg> Photography</span>
+          <span class="tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg> Travel</span>
+          <span class="tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> Coffee</span>
+          <span class="tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg> Fitness</span>
+        </div>
+        <div class="about-ctas">
+          <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" class="btn btn-dark">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Photography
+          </a>
+          <a href="https://medium.com/@goroyeh56" target="_blank" class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            Medium
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTOGRAPHY -->
+  <section id="photography">
+    <div class="container">
+      <p class="section-eyebrow center">THROUGH MY LENS</p>
+      <h2 class="section-title center">Through My Lens</h2>
+      <p class="section-sub center">I love to capture beautiful moments in life through my camera — landscapes, streets, and beautiful people.</p>
+      <div class="insta-profile">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=60%2C60&ssl=1" alt="@goroyeh56.photography" class="insta-avatar"/>
+        <div>
+          <strong>@goroyeh56.photography</strong>
+          <span>Landscapes, streets &amp; beautiful people</span>
+        </div>
+      </div>
+      <div class="photo-grid" id="photoGrid">
+        <!-- Auto-populated by photo-proxy.php via main.js -->
+        <div class="photo-item photo-skeleton"></div>
+        <div class="photo-item photo-skeleton"></div>
+        <div class="photo-item photo-skeleton"></div>
+        <div class="photo-item photo-skeleton"></div>
+        <div class="photo-item photo-skeleton"></div>
+        <div class="photo-item photo-skeleton"></div>
+        <div class="photo-item photo-skeleton"></div>
+        <div class="photo-item photo-skeleton"></div>
+      </div>
+      <div class="center" style="margin-top:2.5rem">
+        <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" class="btn btn-outline">View on Instagram →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAVEL MAP -->
+  <section id="travel">
+    <div class="container">
+      <p class="section-eyebrow center">PLACES I'VE BEEN</p>
+      <h2 class="section-title center">Places I've Been</h2>
+      <p class="section-sub center">Exploring the world one country at a time — each place a new story, a new frame.</p>
+      <div class="map-container">
+        <svg id="worldMap" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="map-legend">
+          <span class="legend-dot visited"></span> Visited
+          <span class="legend-dot" style="margin-left:1rem"></span> Not yet
+        </div>
+      </div>
+      <div class="travel-countries">
+        <div class="country-chip visited">🇹🇼 Taiwan</div>
+        <div class="country-chip visited">🇯🇵 Japan</div>
+        <div class="country-chip visited">🇺🇸 USA</div>
+        <div class="country-chip visited">🇰🇷 South Korea</div>
+        <div class="country-chip visited">🇨🇳 China</div>
+        <div class="country-chip">🇫🇷 France</div>
+        <div class="country-chip">🇬🇧 UK</div>
+        <div class="country-chip">🇨🇦 Canada</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKSHELF -->
+  <section id="bookshelf">
+    <div class="container">
+      <p class="section-eyebrow">WHAT I'M READING</p>
+      <div class="bookshelf-header">
+        <h2 class="section-title">My Bookshelf</h2>
+        <div class="book-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="reading">Reading</button>
+          <button class="filter-btn" data-filter="finished">Finished</button>
+          <button class="filter-btn" data-filter="want">Want to Read</button>
+        </div>
+      </div>
+      <div class="books-grid" id="booksGrid">
+        <!-- Books rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CHANNELS -->
+  <section id="channels">
+    <div class="container">
+      <p class="section-eyebrow center">FIND ME ON</p>
+      <h2 class="section-title center">My Channels</h2>
+      <p class="section-sub center">Follow along on my journey — from machine learning breakthroughs to travel adventures and everything in between.</p>
+      <div class="channels-grid">
+        <div class="channel-card highlight">
+          <div class="channel-top">
+            <div class="channel-icon instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+            <span class="channel-category">Photography</span>
+          </div>
+          <h3>Instagram</h3>
+          <p class="channel-handle">@goroyeh56.photography</p>
+          <p class="channel-desc">Behind-the-lens moments — travel, street, and portrait photography from around the world.</p>
+          <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" class="channel-link">Follow →</a>
+        </div>
+        <div class="channel-card highlight">
+          <div class="channel-top">
+            <div class="channel-icon youtube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20.06 12 20.06 12 20.06s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></div>
+            <span class="channel-category">Shorts</span>
+          </div>
+          <h3>YouTube</h3>
+          <p class="channel-handle">@NorthStarStudioGoro56</p>
+          <p class="channel-desc">Short videos on machine learning, autonomous driving, travel vlogs, and life as an engineer.</p>
+          <a href="https://www.youtube.com/@NorthStarStudioGoro56/shorts" target="_blank" class="channel-link">Subscribe →</a>
+        </div>
+        <div class="channel-card">
+          <div class="channel-top">
+            <div class="channel-icon podcast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+            <span class="channel-category">Apple Podcasts</span>
+          </div>
+          <h3>Podcast</h3>
+          <p class="channel-handle">North Star Pilot</p>
+          <p class="channel-desc">Conversations about finding your north star — career, curiosity, and living with intention.</p>
+          <a href="#" class="channel-link">Listen →</a>
+        </div>
+        <div class="channel-card">
+          <div class="channel-top">
+            <div class="channel-icon medium"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg></div>
+            <span class="channel-category">Blog</span>
+          </div>
+          <h3>Medium</h3>
+          <p class="channel-handle">@goroyeh56</p>
+          <p class="channel-desc">Deep dives into machine learning, personal growth, and reflections from the road.</p>
+          <a href="https://medium.com/@goroyeh56" target="_blank" class="channel-link">Read →</a>
+        </div>
+        <div class="channel-card">
+          <div class="channel-top">
+            <div class="channel-icon linkedin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+            <span class="channel-category">Professional</span>
+          </div>
+          <h3>LinkedIn</h3>
+          <p class="channel-handle">Goro Yeh</p>
+          <p class="channel-desc">Professional updates, career insights, and networking in tech and engineering.</p>
+          <a href="https://www.linkedin.com/in/goroyeh56/" target="_blank" class="channel-link">Connect →</a>
+        </div>
+        <div class="channel-card">
+          <div class="channel-top">
+            <div class="channel-icon github"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></div>
+            <span class="channel-category">Code</span>
+          </div>
+          <h3>GitHub</h3>
+          <p class="channel-handle">goroyeh56</p>
+          <p class="channel-desc">Open source projects, ML experiments, and code from the autonomous driving world.</p>
+          <a href="https://github.com/goroyeh56" target="_blank" class="channel-link">Explore →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog">
+    <div class="container">
+      <p class="section-eyebrow">WRITING</p>
+      <h2 class="section-title">Recent Posts</h2>
+      <div class="blog-layout">
+        <div class="blog-featured">
+          <a href="https://goroyeh56.com/2026-w13-weekly-review/" target="_blank" class="blog-featured-link">
+            <div class="blog-featured-img">
+              <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2026/03/IMG_4476.jpg?resize=900%2C600&ssl=1" alt="2026 W13 週記"/>
+              <span class="blog-tag life">Life</span>
+            </div>
+            <div class="blog-featured-body">
+              <h3>2026 W13 週記</h3>
+              <p class="blog-meta">March 30, 2026 · 4 min read</p>
+            </div>
+          </a>
+        </div>
+        <div class="blog-list">
+          <a href="https://goroyeh56.com/mlsd-notes/" target="_blank" class="blog-item">
+            <span class="blog-tag ml">Machine Learning</span>
+            <h4>MLSD Notes</h4>
+            <p class="blog-meta">March 29, 2026</p>
+          </a>
+          <a href="https://goroyeh56.com/machine-learning-domain-knowledge-co-authored-with-notion-ai/" target="_blank" class="blog-item">
+            <span class="blog-tag ml">Machine Learning</span>
+            <h4>Machine Learning Domain Knowledge (Co-authored with Notion AI)</h4>
+            <p class="blog-meta">March 29, 2026</p>
+          </a>
+          <a href="https://goroyeh56.com/categories-of-machine-learning/" target="_blank" class="blog-item">
+            <span class="blog-tag ml">Machine Learning</span>
+            <h4>Categories of Machine Learning</h4>
+            <p class="blog-meta">March 22, 2026</p>
+          </a>
+          <div class="blog-medium-card">
+            <p class="on-medium">ON MEDIUM</p>
+            <h4>自動駕駛求職記錄（在職跳槽）</h4>
+            <p class="blog-medium-quote">"The master has failed more times than the beginner has tried"</p>
+          </div>
+        </div>
+      </div>
+      <div class="center" style="margin-top:2.5rem">
+        <a href="https://goroyeh56.com/blog/" target="_blank" class="btn btn-outline">View All Posts →</a>
+        <a href="ml-roadmap.html" class="btn btn-dark" style="margin-left:0.75rem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          ML Roadmap →
+        </a>        
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container contact-wrap">
+      <p class="section-eyebrow center">GET IN TOUCH</p>
+      <h2 class="section-title center">Let's Connect</h2>
+      <p class="section-sub center">Whether it's about machine learning, photography, or just a good conversation — I'd love to hear from you.</p>
+      <form class="contact-form" id="contactForm" action="contact.php" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required/>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="What's on your mind?" required></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn btn-dark">Send Message →</button>
+        </div>
+        <div id="formStatus" class="form-status"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=60%2C60&ssl=1" alt="Goro Yeh" class="footer-avatar"/>
+        <div>
+          <strong>Goro Yeh</strong>
+          <span>Software Engineer & Photographer</span>
+        </div>
+      </div>
+      <nav class="footer-nav">
+        <a href="#about">About</a>
+        <a href="#photography">Photography</a>
+        <a href="#travel">Travel</a>
+        <a href="#bookshelf">Bookshelf</a>
+        <a href="#channels">Channels</a>
+        <a href="#blog">Blog</a>
+        <a href="ml-roadmap.html">ML Roadmap</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@NorthStarStudioGoro56" target="_blank" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20.06 12 20.06 12 20.06s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+        </a>
+        <a href="https://github.com/goroyeh56" target="_blank" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </a>
+        <a href="https://medium.com/@goroyeh56" target="_blank" aria-label="Medium">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg>
+        </a>
+      </div>
+      <p class="footer-copy">© 2026 Goro Yeh. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" aria-hidden="true">
+    <button id="lbClose" aria-label="Close">&times;</button>
+    <button id="lbPrev" aria-label="Previous">&#8592;</button>
+    <button id="lbNext" aria-label="Next">&#8594;</button>
+    <div id="lbImgWrap">
+      <img id="lbImg" src="" alt=""/>
+      <div id="lbSpinner"></div>
+    </div>
+    <div id="lbCaption">
+      <span id="lbCaptionText"></span>
+      <a id="lbInstaLink" href="#" target="_blank"></a>
+    </div>
+    <div id="lbCounter"></div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
