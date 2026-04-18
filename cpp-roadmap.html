@@ -774,6 +774,11 @@ void relay(T&& val) {
     processMove(std::forward<T>(val));
 }` },
           { id:'cpp-lambda', text:'Lambdas, std::function & closures', tag:'C++11',
+            formula:{ title:'Lambda Functions',
+              lines:[
+                {label: 'Purpose', expr: 'Lambda functions allow you to define anonymous functions inline.'},
+                {label:'[]', expr:'Capture Clause: capture variables outside the lambda function scope by either reference [&] or by value [=]'},
+              ],},
             snippet:`#include <algorithm>
 #include <vector>
 #include <functional>
