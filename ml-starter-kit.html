@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Free 12-Week AV Perception Kit — Goro Yeh</title>
+  <meta name="description" content="Battle-tested Python code, Docker configs, and field notes from a Silicon Valley AV engineer. Free download — no fluff, just the tools that actually work."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* ── Hero ── */
+    .lm-hero {
+      margin-top: var(--nav-h);
+      background: var(--dark);
+      color: var(--white);
+      padding: 5rem 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .lm-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg,   transparent, transparent 39px, rgba(255,255,255,0.025) 39px, rgba(255,255,255,0.025) 40px),
+        repeating-linear-gradient(90deg,  transparent, transparent 39px, rgba(255,255,255,0.025) 39px, rgba(255,255,255,0.025) 40px);
+    }
+    /* Subtle gold glow top-right */
+    .lm-hero::after {
+      content: '';
+      position: absolute;
+      top: -120px; right: -80px;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(200,146,42,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .lm-hero .container { position: relative; max-width: 780px; }
+
+    .lm-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lm-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 28px; height: 1px;
+      background: var(--gold);
+    }
+
+    .lm-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+    .lm-title em { font-style: italic; color: var(--gold-light); }
+
+    .lm-subtitle {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.75;
+      max-width: 620px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Social proof bar */
+    .lm-proof {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .lm-proof-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+    }
+    .lm-proof-item svg {
+      width: 14px; height: 14px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* Inline email form in hero */
+    .lm-form-hero {
+      display: flex;
+      gap: 10px;
+      max-width: 520px;
+      flex-wrap: wrap;
+    }
+    .lm-form-hero input[type="email"] {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.85rem 1.1rem;
+      border-radius: 7px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: var(--white);
+      font-size: 0.92rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .lm-form-hero input[type="email"]::placeholder { color: rgba(255,255,255,0.35); }
+    .lm-form-hero input[type="email"]:focus { border-color: var(--gold); }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.85rem 1.6rem;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      border-radius: 7px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .btn-gold:hover { background: #b07d20; transform: translateY(-1px); }
+    .lm-form-note {
+      margin-top: 0.75rem;
+      font-size: 0.76rem;
+      color: rgba(255,255,255,0.35);
+    }
+    .lm-form-success {
+      display: none;
+      padding: 0.9rem 1.2rem;
+      background: rgba(46,125,50,0.2);
+      border: 1px solid rgba(102,187,106,0.3);
+      border-radius: 7px;
+      color: #81c784;
+      font-size: 0.9rem;
+      max-width: 520px;
+    }
+
+    /* ── What's inside ── */
+    .lm-contents {
+      padding: 5rem 0;
+      background: var(--white);
+    }
+    .lm-contents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .lm-content-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      background: var(--bg);
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .lm-content-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+      border-color: #ccc;
+    }
+    .lm-card-icon {
+      width: 40px; height: 40px;
+      background: var(--dark);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    .lm-card-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .lm-card-desc {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .lm-card-tag {
+      display: inline-block;
+      margin-top: 0.75rem;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: var(--bg2);
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    /* Week list */
+    .lm-weeks {
+      padding: 5rem 0;
+      background: var(--bg);
+    }
+    .lm-week-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .lm-week-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+      transition: background 0.15s;
+    }
+    .lm-week-item:hover { background: var(--bg); }
+    .lm-week-item:nth-child(odd) { border-right: 1px solid var(--border); }
+    .lm-week-item:nth-last-child(-n+2) { border-bottom: none; }
+    .lm-week-num {
+      min-width: 32px; height: 32px;
+      background: var(--dark);
+      color: var(--white);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .lm-week-info { flex: 1; }
+    .lm-week-title { font-size: 0.87rem; font-weight: 500; color: var(--text); }
+    .lm-week-goal  { font-size: 0.77rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+
+    /* ── Who is this for ── */
+    .lm-audience {
+      padding: 5rem 0;
+      background: var(--white);
+    }
+    .lm-audience-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+    }
+    .lm-audience-col h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .lm-audience-col.yes h4 { color: #2e7d32; }
+    .lm-audience-col.no  h4 { color: #b71c1c; }
+    .lm-audience-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 0.75rem;
+      font-size: 0.87rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .lm-audience-item::before {
+      flex-shrink: 0;
+      font-size: 0.85rem;
+      margin-top: 1px;
+    }
+    .lm-audience-col.yes .lm-audience-item::before { content: '✓'; color: #2e7d32; font-weight: 700; }
+    .lm-audience-col.no  .lm-audience-item::before { content: '✗'; color: #b71c1c; font-weight: 700; }
+
+    /* ── Author strip ── */
+    .lm-author {
+      padding: 4rem 0;
+      background: var(--dark);
+      color: var(--white);
+    }
+    .lm-author-inner {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .lm-author-img {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid rgba(200,146,42,0.4);
+    }
+    .lm-author-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .lm-author-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+    .lm-author-bio {
+      font-size: 0.87rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.75;
+      max-width: 580px;
+    }
+    .lm-author-bio strong { color: rgba(255,255,255,0.9); }
+
+    /* ── Bottom CTA ── */
+    .lm-cta-bottom {
+      padding: 5rem 0;
+      background: var(--bg);
+      text-align: center;
+    }
+    .lm-cta-bottom .lm-form-hero { margin: 0 auto; justify-content: center; }
+    .lm-cta-bottom .lm-form-note { text-align: center; }
+    .lm-cta-bottom .lm-form-success { margin: 0 auto; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .lm-week-list { grid-template-columns: 1fr; }
+      .lm-week-item:nth-child(odd) { border-right: none; }
+      .lm-week-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+      .lm-week-item:last-child { border-bottom: none; }
+      .lm-audience-cols { grid-template-columns: 1fr; }
+      .lm-author-inner { flex-direction: column; gap: 1.25rem; }
+    }
+    @media (max-width: 500px) {
+      .lm-form-hero { flex-direction: column; }
+      .lm-form-hero input[type="email"],
+      .btn-gold { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=120%2C120&ssl=1" alt="Goro Yeh" class="nav-avatar"/>
+        <span>Goro Yeh</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#photography">Photography</a></li>
+        <li><a href="#travel">Travel</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#bookshelf">Bookshelf</a></li>
+        <li><a href="#channels">Channels</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="ml-roadmap.html" style="color:var(--gold);font-weight:500">ML Roadmap</a></li>
+        <li><a href="cpp-roadmap.html">C++ Roadmap</a></li> 
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="lm-hero">
+    <div class="container">
+      <p class="lm-eyebrow">Free Download · 12-Week Program</p>
+      <h1 class="lm-title">
+        The AV Perception<br/>
+        Starter Kit<em>.</em><br/>
+        <span style="font-size:0.62em;font-weight:400;font-style:italic;color:rgba(255,255,255,0.5);">Battle-tested in Silicon Valley.</span>
+      </h1>
+      <p class="lm-subtitle">
+        12 weeks of Python code, Docker environment configs, and field notes from someone who spent three years building 3D perception systems at an autonomous driving company — not teaching theory, but shipping production models.
+      </p>
+
+      <div class="lm-proof">
+        <span class="lm-proof-item">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 7.5l-4 4a.75.75 0 01-1.06 0l-2-2a.75.75 0 011.06-1.06L7 9.94l3.44-3.44a.75.75 0 011.06 1.06z"/></svg>
+          Waymo &amp; NuScenes datasets included
+        </span>
+        <span class="lm-proof-item">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 7.5l-4 4a.75.75 0 01-1.06 0l-2-2a.75.75 0 011.06-1.06L7 9.94l3.44-3.44a.75.75 0 011.06 1.06z"/></svg>
+          Docker / Conda ready-to-run
+        </span>
+        <span class="lm-proof-item">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 7.5l-4 4a.75.75 0 01-1.06 0l-2-2a.75.75 0 011.06-1.06L7 9.94l3.44-3.44a.75.75 0 011.06 1.06z"/></svg>
+          GitHub repo with full history
+        </span>
+        <span class="lm-proof-item">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 7.5l-4 4a.75.75 0 01-1.06 0l-2-2a.75.75 0 011.06-1.06L7 9.94l3.44-3.44a.75.75 0 011.06 1.06z"/></svg>
+          100% free, no credit card
+        </span>
+      </div>
+
+      <!-- Email form -->
+      <form class="lm-form-hero" id="heroForm" onsubmit="handleSignup(event, 'heroForm')">
+        <input type="email" name="email" placeholder="your@email.com" required autocomplete="email"/>
+        <button type="submit" class="btn-gold">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Get Free Access
+        </button>
+      </form>
+      <div class="lm-form-success" id="heroSuccess">
+        ✓ Check your inbox — the download link is on its way. Welcome aboard.
+      </div>
+      <p class="lm-form-note">No spam. Unsubscribe at any time. ~200 engineers already downloaded this.</p>
+    </div>
+  </div>
+
+  <!-- WHAT'S INSIDE -->
+  <section class="lm-contents">
+    <div class="container">
+      <p class="section-eyebrow">WHAT'S INCLUDED</p>
+      <h2 class="section-title" style="max-width:560px">Everything I wish I had when I started in AV.</h2>
+      <p class="section-sub" style="max-width:600px">
+        Three years of lessons compressed into a toolkit you can actually run on your machine today.
+      </p>
+
+      <div class="lm-contents-grid">
+        <div class="lm-content-card">
+          <div class="lm-card-icon">🐍</div>
+          <div class="lm-card-title">12 Weeks of Runnable Python Code</div>
+          <div class="lm-card-desc">
+            Each week builds on the last — from NumPy vectorization to a complete end-to-end 3D detector. Every file runs out of the box. No tutorial-ware.
+          </div>
+          <span class="lm-card-tag">Python · NumPy · PyTorch</span>
+        </div>
+        <div class="lm-content-card">
+          <div class="lm-card-icon">🐳</div>
+          <div class="lm-card-title">Zero-Setup Docker Environment</div>
+          <div class="lm-card-desc">
+            A single <code style="font-family:monospace;font-size:0.78rem;background:var(--bg2);padding:1px 5px;border-radius:3px">docker-compose up</code> command gives you a GPU-ready container with CUDA, PyTorch, Open3D, and all sensor fusion libraries pre-installed.
+          </div>
+          <span class="lm-card-tag">Docker · CUDA · Conda</span>
+        </div>
+        <div class="lm-content-card">
+          <div class="lm-card-icon">🗂</div>
+          <div class="lm-card-title">Real Dataset Parsing Scripts</div>
+          <div class="lm-card-desc">
+            TFRecord readers for Waymo Open Dataset and NuScenes loaders — including the calibration math most tutorials skip. Parse your first real LiDAR frame in under 10 minutes.
+          </div>
+          <span class="lm-card-tag">Waymo · NuScenes · Protobuf</span>
+        </div>
+        <div class="lm-content-card">
+          <div class="lm-card-icon">🚧</div>
+          <div class="lm-card-title">The Pitfall Guide</div>
+          <div class="lm-card-desc">
+            A brutally honest doc of every mistake I made in my first year — wrong coordinate frames, miscalibrated extrinsics, leaky validation sets. Avoid 3 months of pain in 20 minutes.
+          </div>
+          <span class="lm-card-tag">Field Notes · Anti-patterns</span>
+        </div>
+        <div class="lm-content-card">
+          <div class="lm-card-icon">📊</div>
+          <div class="lm-card-title">Evaluation &amp; mAP Framework</div>
+          <div class="lm-card-desc">
+            Production-style evaluation scripts with IoU-based matching, precision-recall curves, and the KITTI mAP metrics — the same metrics used in industry benchmarks.
+          </div>
+          <span class="lm-card-tag">mAP · IoU · NMS</span>
+        </div>
+        <div class="lm-content-card">
+          <div class="lm-card-icon">🔗</div>
+          <div class="lm-card-title">Private GitHub Repo Access</div>
+          <div class="lm-card-desc">
+            Full commit history so you can see how the code evolved week by week. Not a final polished snapshot — the messy, real process of building something that works.
+          </div>
+          <span class="lm-card-tag">GitHub · Version Control</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 WEEKS -->
+  <section class="lm-weeks">
+    <div class="container">
+      <p class="section-eyebrow">12-WEEK CURRICULUM</p>
+      <h2 class="section-title">From linear algebra to a deployed model.</h2>
+      <p class="section-sub" style="max-width:580px">Structured as a progressive build — each week you ship something real, not just read theory.</p>
+      <div class="lm-week-list">
+        <div class="lm-week-item"><div class="lm-week-num">W1</div><div class="lm-week-info"><div class="lm-week-title">Linear Algebra &amp; Calculus</div><div class="lm-week-goal">3D rotation matrices + point cloud displacement viz</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W2</div><div class="lm-week-info"><div class="lm-week-title">Python Vectorization</div><div class="lm-week-goal">Filter 100k LiDAR points with zero for-loops</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W3</div><div class="lm-week-info"><div class="lm-week-title">Waymo Dataset Parsing</div><div class="lm-week-goal">Extract your first real frame — image + point cloud</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W4</div><div class="lm-week-info"><div class="lm-week-title">Geometric 3D Projection</div><div class="lm-week-goal">Project 3D boxes onto camera images</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W5</div><div class="lm-week-info"><div class="lm-week-title">Deep Learning from Scratch</div><div class="lm-week-goal">NumPy-only MLP forward pass — no PyTorch</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W6</div><div class="lm-week-info"><div class="lm-week-title">CV Foundations: CNN &amp; ViT</div><div class="lm-week-goal">Image backbone + self-attention from scratch</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W7</div><div class="lm-week-info"><div class="lm-week-title">3D Perception Models</div><div class="lm-week-goal">PointNet + BEV projection tensor</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W8</div><div class="lm-week-info"><div class="lm-week-title">Model Training Pipeline</div><div class="lm-week-goal">Full loop with IoU Loss + overfitting check</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W9</div><div class="lm-week-info"><div class="lm-week-title">Sensor Fusion</div><div class="lm-week-goal">Camera-LiDAR geometric alignment</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W10</div><div class="lm-week-info"><div class="lm-week-title">Temporal Modeling</div><div class="lm-week-goal">Kalman tracker through occlusion</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W11</div><div class="lm-week-info"><div class="lm-week-title">Capstone: E2E Detector</div><div class="lm-week-goal">Integrated 3D detector with mAP evaluation</div></div></div>
+        <div class="lm-week-item"><div class="lm-week-num">W12</div><div class="lm-week-info"><div class="lm-week-title">Optimization &amp; Deployment</div><div class="lm-week-goal">PTQ INT8 quantization + inference profiling</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IS THIS FOR -->
+  <section class="lm-audience">
+    <div class="container" style="max-width:760px">
+      <p class="section-eyebrow">IS THIS FOR YOU?</p>
+      <h2 class="section-title">I built this for people who want to build, not just read.</h2>
+      <div class="lm-audience-cols">
+        <div class="lm-audience-col yes">
+          <h4>✓ This is for you if</h4>
+          <div class="lm-audience-item">You can write Python and want to break into AV/robotics ML</div>
+          <div class="lm-audience-item">You've read papers but can't connect theory to working code</div>
+          <div class="lm-audience-item">You're spending hours on environment setup instead of learning</div>
+          <div class="lm-audience-item">You want to build a portfolio project with real-world datasets</div>
+          <div class="lm-audience-item">You prefer learning from code that actually runs in production</div>
+        </div>
+        <div class="lm-audience-col no">
+          <h4>✗ This is NOT for you if</h4>
+          <div class="lm-audience-item">You expect a step-by-step lecture with no independent thinking</div>
+          <div class="lm-audience-item">You've never written a Python function before</div>
+          <div class="lm-audience-item">You want a guaranteed job offer at the end</div>
+          <div class="lm-audience-item">You're looking for shortcut prompts to pass interviews without understanding</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTHOR -->
+  <div class="lm-author">
+    <div class="container">
+      <div class="lm-author-inner">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=120%2C120&ssl=1" alt="Goro Yeh" class="lm-author-img"/>
+        <div>
+          <p class="lm-author-tag">Why trust this?</p>
+          <p class="lm-author-name">Built by someone still in the arena.</p>
+          <p class="lm-author-bio">
+            I'm a Senior Software Engineer at an autonomous driving company in Silicon Valley, working on 3D perception systems. I'm not a full-time educator or influencer — I write code at work every day, then document what I learn here.
+            <br/><br/>
+            <strong>This kit is not a course I sell.</strong> It's the study system I built for myself, open-sourced because I believe the best way to learn is to work through real problems with real data — not synthetic textbook examples.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <section class="lm-cta-bottom">
+    <div class="container">
+      <p class="section-eyebrow center">FREE DOWNLOAD</p>
+      <h2 class="section-title center" style="max-width:500px;margin:0 auto 1rem">Get the full kit. No cost, no catch.</h2>
+      <p class="section-sub center" style="max-width:480px;margin:0 auto 2rem">Enter your email and I'll send you the ZIP + GitHub repo link immediately. You'll also get occasional updates when I publish new code or field notes.</p>
+      <form class="lm-form-hero" id="bottomForm" onsubmit="handleSignup(event, 'bottomForm')">
+        <input type="email" name="email" placeholder="your@email.com" required autocomplete="email"/>
+        <button type="submit" class="btn-gold">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Send Me the Kit
+        </button>
+      </form>
+      <div class="lm-form-success" id="bottomSuccess">
+        ✓ Check your inbox — the download link is on its way. Welcome aboard.
+      </div>
+      <p class="lm-form-note">Unsubscribe anytime. I hate spam more than you do.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=60%2C60&ssl=1" alt="Goro Yeh" class="footer-avatar"/>
+        <div><strong>Goro Yeh</strong><span>Software Engineer & Photographer</span></div>
+      </div>
+      <nav class="footer-nav">
+        <a href="/">Home</a><a href="/#about">About</a><a href="/#photography">Photography</a>
+        <a href="/#blog">Blog</a><a href="ml-roadmap.html">ML Roadmap</a><a href="ml-starter-kit.html">Free Kit</a><a href="/#contact">Contact</a>
+      </nav>
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://github.com/goroyeh56" target="_blank" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a>
+        <a href="https://medium.com/@goroyeh56" target="_blank" aria-label="Medium"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg></a>
+      </div>
+      <p class="footer-copy">© 2026 Goro Yeh. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // ── Email signup handler ─────────────────────────────────────────────
+    // TODO: Replace this URL with your actual email service endpoint
+    // Options: Mailchimp, ConvertKit, Buttondown, Beehiiv, or your own PHP
+    const SIGNUP_ENDPOINT = '/newsletter-signup.php'; // <-- change this
+
+    async function handleSignup(e, formId) {
+      e.preventDefault();
+      const form    = document.getElementById(formId);
+      const btn     = form.querySelector('button[type="submit"]');
+      const success = document.getElementById(formId.replace('Form', 'Success'));
+      const email   = form.querySelector('input[type="email"]').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        // If you have a PHP endpoint, uncomment this block:
+        // const res = await fetch(SIGNUP_ENDPOINT, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ email, source: 'ml-starter-kit' }),
+        // });
+        // if (!res.ok) throw new Error('Server error');
+
+        // For now — store in localStorage and show success
+        // (Replace with real backend call above)
+        const signups = JSON.parse(localStorage.getItem('ml_kit_signups') || '[]');
+        if (!signups.includes(email)) signups.push(email);
+        localStorage.setItem('ml_kit_signups', JSON.stringify(signups));
+
+        form.style.display = 'none';
+        success.style.display = 'block';
+
+        // Track in Google Analytics if available
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'lead_magnet_signup', { email_domain: email.split('@')[1] });
+        }
+      } catch(err) {
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Get Free Access';
+        alert('Something went wrong. Please try again or email me directly.');
+      }
+    }
+  </script>
+</body>
+</html>
