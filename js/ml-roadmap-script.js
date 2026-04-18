@@ -1,4 +1,11 @@
-  <script>
+/**
+ * ml-roadmap-script.js
+ * ML Roadmap interactive logic — syntax highlighter, Python runner,
+ * tab system, chapter rendering, Case Study renderer.
+ *
+ * Loaded by ml-roadmap.html after js/main.js.
+ * Data lives here; HTML structure lives in ml-roadmap.html.
+ */
   (() => {
     const STORAGE_KEY = 'goroyeh56-ml-roadmap-v3';
 
@@ -178,12 +185,13 @@
     }
 
     // ════════════════════════════════════════════════════════════════════
-    // JUDGE0 PYTHON RUNNER
     // ════════════════════════════════════════════════════════════════════
-    const JUDGE0_ENDPOINT = 'https://judge0.sabe.io/submissions?base64_encoded=false&wait=true';
-    const PYTHON_ID = 71;
+    // PYTHON RUNNER
+    // Primary:  Piston API  (free, no key, numpy/matplotlib/scipy/sklearn)
+    // Fallback: Judge0 CE   (free, no key, stdlib only — shown if Piston fails)
+    // ════════════════════════════════════════════════════════════════════
 
-    // Matplotlib capture shim injected before user code
+    // Matplotlib → base64 PNG capture shim (prepended to all user code)
     const PLOT_SHIM = `import sys,io,base64
 _pimg=None
 try:
@@ -199,7 +207,9 @@ try:
  _osh=plt.show
  def _sh():
   global _pimg
-  b=io.BytesIO();plt.savefig(b,format='png',dpi=90,bbox_inches='tight')
+  b=io.BytesIO()
+  _orig_sf=_os
+  plt.gcf().savefig(b,format='png',dpi=90,bbox_inches='tight')
   b.seek(0);_pimg='data:image/png;base64,'+base64.b64encode(b.read()).decode()
   plt.close('all')
  plt.show=_sh
@@ -207,56 +217,98 @@ except:pass
 `;
 
     const PLOT_FOOTER = `
-if '_pimg' in dir() and _pimg:print('__IMG__:'+_pimg)
-elif 'plt' in dir():
- try:
-  if plt.get_fignums():
-   b=__import__('io').BytesIO()
-   plt.savefig(b,format='png',dpi=90,bbox_inches='tight')
-   b.seek(0)
-   print('__IMG__:data:image/png;base64,'+__import__('base64').b64encode(b.read()).decode())
-   plt.close('all')
- except:pass
+try:
+ if '_pimg' in dir() and _pimg:print('__IMG__:'+_pimg)
+ elif 'plt' in dir() and plt.get_fignums():
+  b=__import__('io').BytesIO()
+  plt.savefig(b,format='png',dpi=90,bbox_inches='tight')
+  b.seek(0)
+  print('__IMG__:data:image/png;base64,'+__import__('base64').b64encode(b.read()).decode())
+  plt.close('all')
+except:pass
 `;
 
-    async function runPython(code, outputEl) {
-      outputEl.innerHTML = '<span class="out-line info">⏳ Submitting to Python runner…</span>';
-      const fullCode = PLOT_SHIM + '\n' + code + '\n' + PLOT_FOOTER;
-      try {
-        const res = await fetch(JUDGE0_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ language_id: PYTHON_ID, source_code: fullCode }),
-        });
-        if (!res.ok) throw new Error(`Runner returned ${res.status}`);
-        const result = await res.json();
-
-        let stdout = result.stdout || '';
-        const stderr = result.stderr || result.compile_output || '';
-        const status = result.status?.description || '';
-
-        // Extract embedded plot
-        let imgData = null;
-        const lines = stdout.split('\n');
-        const cleanLines = [];
-        for (const line of lines) {
-          if (line.startsWith('__IMG__:')) { imgData = line.slice(8); }
-          else { cleanLines.push(line); }
-        }
-        stdout = cleanLines.join('\n');
-        renderOutput(outputEl, stdout, stderr, imgData, status);
-
-      } catch(e) {
-        outputEl.innerHTML = `<span class="out-line err">❌ ${esc(String(e))}</span>
-<span class="out-line info">Try pasting into <a href="https://replit.com" target="_blank" style="color:#79c0ff">replit.com</a> or <a href="https://colab.research.google.com" target="_blank" style="color:#79c0ff">Google Colab</a></span>`;
-      }
+    // ── Piston API runner (has numpy, matplotlib, scipy, sklearn) ────────
+    async function runViaPiston(code) {
+      const res = await fetch('https://emkc.org/api/v2/piston/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          language: 'python',
+          version: '3.10',
+          files: [{ name: 'script.py', content: PLOT_SHIM + '\n' + code + '\n' + PLOT_FOOTER }],
+        }),
+        signal: AbortSignal.timeout(20000),
+      });
+      if (!res.ok) throw new Error(`Piston HTTP ${res.status}`);
+      const data = await res.json();
+      const run = data.run || {};
+      return {
+        stdout: run.stdout || '',
+        stderr: run.stderr || (run.code !== 0 ? `Exit code: ${run.code}` : ''),
+        status: run.code === 0 ? 'Accepted' : 'Runtime Error',
+      };
     }
 
+    // ── Judge0 CE fallback (stdlib only, no numpy) ───────────────────────
+    async function runViaJudge0(code) {
+      const res = await fetch('https://ce.judge0.com/submissions?wait=true', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language_id: 71, source_code: code }),
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!res.ok) throw new Error(`Judge0 HTTP ${res.status}`);
+      const data = await res.json();
+      return {
+        stdout: data.stdout || '',
+        stderr: data.stderr || data.compile_output || '',
+        status: data.status?.description || '',
+      };
+    }
+
+    async function runPython(code, outputEl) {
+      outputEl.style.display = 'block';
+      outputEl.innerHTML = '<span class="out-line info">⏳ 正在啟動 Python 引擎...</span>';
+
+      try {
+        // 1. 確保 Pyodide 已載入
+        if (!window.pyodide) {
+          window.pyodide = await loadPyodide();
+        }
+
+        // 2. 自動下載程式碼需要的套件 (如 numpy)
+        outputEl.innerHTML = '<span class="out-line info">⏳ 正在下載必要套件 (Numpy/Matplotlib)...</span>';
+        await window.pyodide.loadPackagesFromImports(code);
+
+        // 3. 設定輸出導向 (把 Python 的 print 轉到網頁上)
+        await window.pyodide.runPythonAsync(`
+    import sys
+    import io
+    sys.stdout = io.StringIO()
+        `);
+
+        // 4. 執行代碼
+        outputEl.innerHTML = '<span class="out-line info">⏳ 執行中...</span>';
+        await window.pyodide.runPythonAsync(code);
+
+        // 5. 取得結果
+        const stdout = window.pyodide.runPython("sys.stdout.getvalue()");
+        
+        // 使用您原本頁面定義的渲染函數顯示結果
+        renderOutput(outputEl, stdout, "", null, { name: "Success" });
+
+      } catch (err) {
+        // 顯示錯誤訊息
+        outputEl.innerHTML = `<span class="out-line err">❌ 執行錯誤: ${err.message}</span>`;
+      }
+    }
     // ════════════════════════════════════════════════════════════════════
     // EDITOR PANEL: create with syntax highlighting textarea
     // ════════════════════════════════════════════════════════════════════
     function createEditorPanel(topicId, initialCode) {
       const highlighted = highlightPython(initialCode);
+      const escapedCode = esc(initialCode);
       return `<div class="editor-panel" id="editor-${topicId}">
         <div class="editor-toolbar">
           <span class="editor-toolbar-label">Python — edit &amp; run</span>
@@ -265,12 +317,12 @@ elif 'plt' in dir():
             <svg viewBox="0 0 12 12" fill="currentColor"><polygon points="2,1 11,6 2,11"/></svg> Run
           </button>
         </div>
-        <div class="editor-wrap" style="position:relative;background:#0d1117;">
-          <div class="editor-highlighted" id="hl-${topicId}" aria-hidden="true">${highlighted}</div>
+        <div class="editor-wrap">
+          <div class="editor-highlighted" id="hl-${topicId}" aria-hidden="true">${highlighted}
+</div>
           <textarea class="editor-textarea" id="edtxt-${topicId}" spellcheck="false"
             oninput="syncHighlight('${topicId}')"
-            onscroll="syncScroll('${topicId}')"
-            style="background:transparent;color:#e6edf3;position:relative;z-index:1;width:100%;min-height:130px;border:none;outline:none;resize:vertical;font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:0.81rem;line-height:1.7;padding:0.9rem 1.2rem;tab-size:4;box-sizing:border-box;caret-color:#e6edf3;">${esc(initialCode)}</textarea>
+            onscroll="syncScroll('${topicId}')">${escapedCode}</textarea>
         </div>
         <div class="editor-output" id="edout-${topicId}">
           <span class="out-line info">Click ▷ Run to execute Python</span>
@@ -283,8 +335,8 @@ elif 'plt' in dir():
       const ta = document.getElementById(`edtxt-${topicId}`);
       const hl = document.getElementById(`hl-${topicId}`);
       if (!ta || !hl) return;
-      hl.innerHTML = highlightPython(ta.value);
-      // Keep highlight scroll in sync
+      // Trailing newline ensures highlight div height matches textarea
+      hl.innerHTML = highlightPython(ta.value) + '\n';
       hl.scrollTop  = ta.scrollTop;
       hl.scrollLeft = ta.scrollLeft;
     };
@@ -853,6 +905,3 @@ elif 'plt' in dir():
 
     init();
   })();
-  </script>
-</body>
-</html>

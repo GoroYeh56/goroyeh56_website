@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>C++ Roadmap — Goro Yeh</title>
+  <meta name="description" content="Roadmap to Master Object-Oriented C++ Programming — from fundamentals to modern C++20, with a focus on systems programming and autonomous driving applications."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* Reuse all ML Roadmap layout/variable classes from style.css */
+    .rm-hero {
+      background: var(--dark); color: var(--white);
+      padding: 4rem 0 3rem; margin-top: var(--nav-h);
+      position: relative; overflow: hidden;
+    }
+    .rm-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+    }
+    .rm-hero .container { position: relative; }
+    .rm-eyebrow { font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:.75rem; font-weight:500; }
+    .rm-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4.5vw,3.2rem); font-weight:700; line-height:1.15; color:var(--white); margin-bottom:1rem; }
+    .rm-subtitle { font-size:1rem; color:rgba(255,255,255,0.65); max-width:600px; line-height:1.7; margin-bottom:2rem; }
+    .rm-stats { display:flex; gap:2.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+    .rm-stat-n { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--white); line-height:1; }
+    .rm-stat-l { font-size:.75rem; color:rgba(255,255,255,.5); margin-top:.2rem; }
+    .rm-progress-wrap { background:rgba(255,255,255,.1); border-radius:99px; height:4px; max-width:400px; overflow:hidden; margin-bottom:.5rem; }
+    .rm-progress-fill { height:100%; background:var(--gold); border-radius:99px; transition:width .5s; }
+    .rm-progress-label { font-size:.75rem; color:rgba(255,255,255,.4); }
+
+    /* Body layout */
+    .rm-body { padding:3rem 0 5rem; }
+    .rm-layout { display:grid; grid-template-columns:220px 1fr; gap:3rem; align-items:start; }
+
+    /* Sidebar */
+    .rm-sidebar { position:sticky; top:calc(var(--nav-h) + 1.5rem); }
+    .rm-sidebar-title { font-size:.68rem; font-weight:500; text-transform:uppercase; letter-spacing:.12em; color:var(--text-muted); margin-bottom:.75rem; }
+    .rm-nav-list { list-style:none; padding:0; margin:0 0 1.5rem; }
+    .rm-nav-list li { margin-bottom:3px; }
+    .rm-nav-link {
+      display:flex; align-items:center; gap:8px; width:100%;
+      padding:.4rem .7rem; border-radius:var(--radius-sm);
+      font-size:.8rem; color:var(--text-muted); background:none;
+      border:none; cursor:pointer; font-family:'DM Sans',sans-serif;
+      transition:all var(--transition); text-align:left;
+    }
+    .rm-nav-link:hover { background:var(--bg2); color:var(--text); }
+    .rm-nav-link.status-done { color:#2e7d32; }
+    .rm-nav-link.status-in-progress { color:#1565c0; }
+    .rm-nav-num { min-width:18px; font-size:.7rem; text-align:right; color:var(--text-muted); }
+    .rm-sidebar-divider { border:none; border-top:1px solid var(--border); margin:1rem 0; }
+    .rm-sidebar-meta { font-size:.78rem; color:var(--text-muted); line-height:1.6; }
+    .rm-sidebar-meta a { color:var(--gold); text-decoration:none; }
+
+    /* Legend */
+    .rm-legend { display:flex; gap:1.25rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .legend-item { display:flex; align-items:center; gap:5px; font-size:.78rem; color:var(--text-muted); }
+    .legend-dot { width:10px; height:10px; border-radius:50%; }
+    .legend-dot.done { background:#2e7d32; }
+    .legend-dot.in-progress { background:#1565c0; }
+    .legend-dot.not-started { background:var(--border); border:1px solid #ccc; }
+
+    /* Chapters */
+    .rm-chapters { display:flex; flex-direction:column; gap:10px; }
+    .rm-chapter {
+      border:1px solid var(--border); border-radius:var(--radius);
+      background:var(--white); overflow:hidden;
+      transition:box-shadow var(--transition);
+    }
+    .rm-chapter.status-done   { border-color:#c8e6c9; }
+    .rm-chapter.status-in-progress { border-color:#bbdefb; }
+    .rm-chapter-header {
+      display:flex; align-items:center; gap:14px;
+      padding:1.1rem 1.25rem; cursor:pointer;
+    }
+    .rm-chapter-header:hover { background:var(--bg); }
+    .ch-num-badge {
+      width:36px; height:36px; border-radius:8px;
+      background:var(--dark); color:var(--white);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.8rem; font-weight:500; flex-shrink:0;
+    }
+    .status-done    .ch-num-badge { background:#2e7d32; }
+    .status-in-progress .ch-num-badge { background:#1565c0; }
+    .ch-info { flex:1; min-width:0; }
+    .ch-title-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:.25rem; }
+    .ch-name { font-size:.97rem; font-weight:500; color:var(--text); }
+    .ch-status-badge { font-size:.68rem; padding:2px 8px; border-radius:99px; font-weight:500; }
+    .status-done    .ch-status-badge { background:#e8f5e9; color:#2e7d32; }
+    .status-in-progress .ch-status-badge { background:#e3f2fd; color:#1565c0; }
+    .status-not-started .ch-status-badge { background:var(--bg2); color:var(--text-muted); }
+    .ch-meta-row { font-size:.78rem; color:var(--text-muted); }
+    .ch-progress-mini { display:flex; align-items:center; gap:8px; margin-top:.4rem; }
+    .ch-prog-track { flex:1; max-width:120px; height:3px; background:var(--bg2); border-radius:99px; overflow:hidden; }
+    .ch-prog-fill  { height:100%; background:var(--gold); border-radius:99px; transition:width .3s; }
+    .ch-prog-label { font-size:.7rem; color:var(--text-muted); }
+    .ch-arrow { font-size:.7rem; color:var(--text-muted); transition:transform .2s; flex-shrink:0; }
+    .rm-chapter.is-open .ch-arrow { transform:rotate(180deg); }
+
+    /* Chapter body */
+    .rm-chapter-body { display:none; border-top:1px solid var(--border); }
+    .rm-chapter-body.open { display:block; }
+
+    /* Topics list */
+    .topics-list { padding:.75rem 1.25rem 0; display:flex; flex-direction:column; gap:4px; }
+    .topic-row {
+      border:1px solid var(--border); border-radius:var(--radius-sm);
+      background:var(--white); overflow:hidden;
+      transition:border-color var(--transition);
+    }
+    .topic-row:hover { border-color:#bbb; }
+    .topic-row.done  { background:#f6fcf6; border-color:#c8e6c9; }
+    .topic-main {
+      display:flex; align-items:center; gap:10px;
+      padding:.6rem .85rem; min-height:44px;
+    }
+    .topic-main.expandable { cursor:pointer; }
+    .topic-check-btn {
+      width:20px; height:20px; border-radius:50%;
+      border:1.5px solid var(--border); background:var(--white);
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; cursor:pointer; transition:all var(--transition); padding:0;
+    }
+    .topic-check-btn svg { opacity:0; transition:opacity .15s; }
+    .topic-check-btn.checked { background:#2e7d32; border-color:#2e7d32; }
+    .topic-check-btn.checked svg { opacity:1; }
+    .topic-check-btn:hover { border-color:#2e7d32; }
+    .topic-text { font-size:.85rem; color:var(--text); flex:1; line-height:1.35; }
+    .topic-text.done-text { color:#2e7d32; text-decoration:line-through; text-decoration-color:#a5d6a7; }
+    .topic-tag-pill { font-size:.68rem; padding:2px 7px; border-radius:99px; background:var(--bg2); color:var(--text-muted); flex-shrink:0; }
+    .topic-expand-icon { font-size:.6rem; color:var(--text-muted); flex-shrink:0; width:14px; text-align:center; transition:transform .2s; }
+    .topic-row.topic-open .topic-expand-icon { transform:rotate(180deg); }
+
+    /* Topic detail */
+    .topic-detail { display:none; border-top:1px solid var(--border); background:var(--bg); }
+    .topic-row.topic-open .topic-detail { display:block; animation:slideDown .18s ease; }
+    @keyframes slideDown { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+
+    .td-formula { padding:1rem 1.1rem; border-bottom:1px solid var(--border); }
+    .td-formula:last-child { border-bottom:none; }
+    .td-formula-title { font-size:.72rem; font-weight:500; color:var(--text-muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.75rem; }
+    .td-formula-lines { display:flex; flex-direction:column; gap:6px; margin-bottom:.75rem; }
+    .td-formula-row { display:grid; grid-template-columns:140px 1fr; gap:.75rem; align-items:baseline; }
+    .td-formula-label { font-size:.74rem; color:var(--text-muted); text-align:right; }
+    .td-formula-expr { font-family:'SF Mono','Fira Code','Consolas',monospace; font-size:.81rem; color:var(--text); background:var(--white); padding:.28rem .65rem; border-radius:4px; border:1px solid var(--border); line-height:1.5; }
+    .td-formula-note { font-size:.78rem; color:var(--text-muted); line-height:1.6; padding:.5rem .75rem; border-left:2px solid var(--gold); background:rgba(200,146,42,.04); border-radius:0 4px 4px 0; }
+
+    .td-code { padding:.75rem 1.1rem 1rem; }
+    .td-code-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem; }
+    .td-code-lang { font-size:.68rem; padding:2px 8px; border-radius:99px; background:var(--dark); color:rgba(255,255,255,.65); }
+    .td-code-actions { display:flex; gap:6px; }
+    .copy-btn { font-size:.73rem; padding:3px 10px; border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text-muted); background:var(--white); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all var(--transition); }
+    .copy-btn:hover { border-color:var(--text); color:var(--text); }
+    .copy-btn.copied { border-color:#2e7d32; color:#2e7d32; }
+    .code-block { background:#0d1117; color:#e6edf3; padding:1rem 1.2rem; font-family:'SF Mono','Fira Code','Consolas',monospace; font-size:.81rem; line-height:1.7; overflow-x:auto; margin:0; border-radius:var(--radius-sm); }
+
+    /* C++ specific syntax colors */
+    .cpp-kw   { color:#ff7b72; }
+    .cpp-type { color:#ffa657; }
+    .cpp-fn   { color:#d2a8ff; }
+    .cpp-str  { color:#a5d6ff; }
+    .cpp-num  { color:#79c0ff; }
+    .cpp-cm   { color:#8b949e; font-style:italic; }
+    .cpp-pre  { color:#ffa657; }
+
+    /* Resources */
+    .resources-section { border-top:1px solid var(--border); padding:1rem 1.25rem; }
+    .resources-title { font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); margin-bottom:.6rem; }
+    .resource-links { display:flex; flex-wrap:wrap; gap:6px; }
+    .resource-link { font-size:.78rem; padding:3px 10px; border-radius:99px; border:1px solid var(--border); color:var(--text-muted); background:var(--white); text-decoration:none; transition:all var(--transition); }
+    .resource-link:hover { border-color:var(--gold); color:var(--gold); }
+
+    @media(max-width:900px) { .rm-layout{grid-template-columns:1fr} .rm-sidebar{position:static} }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=120%2C120&ssl=1" alt="Goro Yeh" class="nav-avatar"/>
+        <span>Goro Yeh</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#photography">Photography</a></li>
+        <li><a href="/#travel">Travel</a></li>
+        <li><a href="/#blog">Blog</a></li>
+        <li><a href="/#bookshelf">Bookshelf</a></li>
+        <li><a href="/#channels">Channels</a></li>
+        <li><a href="ml-roadmap.html">ML Roadmap</a></li>
+        <li><a href="cpp-roadmap.html" style="color:var(--text);font-weight:500">C++ Roadmap</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="rm-hero">
+    <div class="container">
+      <p class="rm-eyebrow">C++ · SYSTEMS PROGRAMMING</p>
+      <h1 class="rm-title">Roadmap to Master<br/>Object-Oriented C++</h1>
+      <p class="rm-subtitle">From raw pointers to modern C++20 — a structured path through memory management, OOP design patterns, templates, and production-quality systems code, with examples from autonomous driving software.</p>
+      <div class="rm-stats">
+        <div class="rm-stat"><div class="rm-stat-n" id="hero-pct">0%</div><div class="rm-stat-l">Overall progress</div></div>
+        <div class="rm-stat"><div class="rm-stat-n" id="hero-done-ch">0</div><div class="rm-stat-l">Chapters done</div></div>
+        <div class="rm-stat"><div class="rm-stat-n" id="hero-done-t">0</div><div class="rm-stat-l">Topics complete</div></div>
+        <div class="rm-stat"><div class="rm-stat-n">8</div><div class="rm-stat-l">Total chapters</div></div>
+      </div>
+      <div class="rm-progress-wrap"><div class="rm-progress-fill" id="heroPbar" style="width:0%"></div></div>
+      <p class="rm-progress-label" id="heroPbarLabel">0 topics completed</p>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="rm-body">
+    <div class="container">
+      <div class="rm-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="rm-sidebar">
+          <p class="rm-sidebar-title">Chapters</p>
+          <ul class="rm-nav-list" id="cppSidebarNav"></ul>
+          <hr class="rm-sidebar-divider"/>
+          <p class="rm-sidebar-meta">Progress saved in browser.<br/>Last updated: <span id="lastUpdated">—</span></p>
+          <hr class="rm-sidebar-divider"/>
+          <p class="rm-sidebar-meta">See also: <a href="ml-roadmap.html">ML Roadmap →</a></p>
+        </aside>
+
+        <!-- CHAPTERS -->
+        <main>
+          <div class="rm-legend">
+            <span class="legend-item"><span class="legend-dot done"></span> Completed</span>
+            <span class="legend-item"><span class="legend-dot in-progress"></span> In progress</span>
+            <span class="legend-item"><span class="legend-dot not-started"></span> Not started</span>
+            <span style="font-size:.78rem;color:var(--text-muted)">· Click topic row to expand · Circle to mark done</span>
+          </div>
+          <div class="rm-chapters" id="cppChapters"></div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=60%2C60&ssl=1" alt="Goro Yeh" class="footer-avatar"/>
+        <div><strong>Goro Yeh</strong><span>Software Engineer & Photographer</span></div>
+      </div>
+      <nav class="footer-nav">
+        <a href="/">Home</a><a href="/#about">About</a><a href="/#photography">Photography</a>
+        <a href="/#blog">Blog</a><a href="ml-roadmap.html">ML Roadmap</a>
+        <a href="cpp-roadmap.html">C++ Roadmap</a><a href="/#contact">Contact</a>
+      </nav>
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://github.com/goroyeh56" target="_blank" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a>
+        <a href="https://medium.com/@goroyeh56" target="_blank" aria-label="Medium"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg></a>
+      </div>
+      <p class="footer-copy">© 2026 Goro Yeh. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+  (() => {
+    const STORAGE_KEY = 'goroyeh56-cpp-roadmap-v1';
+
+    // ── C++ Syntax Highlighter ───────────────────────────────────────────
+    const CPP_KW = new Set(['alignas','alignof','and','and_eq','asm','auto','bitand','bitor',
+      'bool','break','case','catch','char','char8_t','char16_t','char32_t','class','compl',
+      'concept','const','consteval','constexpr','constinit','const_cast','continue','co_await',
+      'co_return','co_yield','decltype','default','delete','do','double','dynamic_cast','else',
+      'enum','explicit','export','extern','false','float','for','friend','goto','if','inline',
+      'int','long','mutable','namespace','new','noexcept','not','not_eq','nullptr','operator',
+      'or','or_eq','private','protected','public','register','reinterpret_cast','requires',
+      'return','short','signed','sizeof','static','static_assert','static_cast','struct',
+      'switch','template','this','thread_local','throw','true','try','typedef','typeid',
+      'typename','union','unsigned','using','virtual','void','volatile','wchar_t','while','xor','xor_eq'
+    ]);
+    const CPP_TYPES = new Set(['string','vector','map','unordered_map','set','unordered_set',
+      'pair','tuple','optional','variant','any','array','deque','list','queue','stack',
+      'shared_ptr','unique_ptr','weak_ptr','function','thread','mutex','atomic',
+      'iostream','fstream','sstream','istream','ostream','size_t','ptrdiff_t','uint8_t',
+      'uint16_t','uint32_t','uint64_t','int8_t','int16_t','int32_t','int64_t'
+    ]);
+
+    function highlightCpp(code) {
+      return code.split('\n').map(line => {
+        // Comments
+        const ci = line.indexOf('//');
+        let code_part = ci >= 0 ? line.slice(0, ci) : line;
+        let cm_part   = ci >= 0 ? `<span class="cpp-cm">${esc(line.slice(ci))}</span>` : '';
+        // Preprocessor
+        const trimmed = code_part.trimStart();
+        if (trimmed.startsWith('#')) {
+          return `<span class="cpp-pre">${esc(code_part)}</span>${cm_part}`;
+        }
+        // Tokenize
+        code_part = code_part.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,
+          m => `<span class="cpp-str">${esc(m)}</span>`);
+        code_part = code_part.replace(/\b(\d+\.?\d*[uUlLfF]*|0x[0-9a-fA-F]+)\b/g,
+          m => `<span class="cpp-num">${esc(m)}</span>`);
+        code_part = code_part.replace(/\b([A-Za-z_][A-Za-z0-9_]*)\b/g, (m, w) => {
+          if (CPP_KW.has(w))    return `<span class="cpp-kw">${esc(w)}</span>`;
+          if (CPP_TYPES.has(w)) return `<span class="cpp-type">${esc(w)}</span>`;
+          return esc(w);
+        });
+        // Function calls (word followed by '(')
+        code_part = code_part.replace(/\b([A-Za-z_][A-Za-z0-9_]*)(\s*\()/g, (m, fn, paren) => {
+          if (m.includes('cpp-kw') || m.includes('cpp-type')) return m;
+          return `<span class="cpp-fn">${esc(fn)}</span>${paren}`;
+        });
+        return code_part + cm_part;
+      }).join('\n');
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── State ─────────────────────────────────────────────────────────────
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+      catch { return {}; }
+    }
+    function saveState(s) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      const el = document.getElementById('lastUpdated');
+      if (el) el.textContent = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    }
+    function getChapterStatus(ch, state) {
+      const done = ch.topics.filter(t => state[t.id]).length;
+      return done === ch.topics.length ? 'done' : done > 0 ? 'in-progress' : 'not-started';
+    }
+    function updateStats(state) {
+      const total = chapters.reduce((s,c) => s+c.topics.length, 0);
+      const done  = Object.values(state).filter(Boolean).length;
+      const doneCh = chapters.filter(c => getChapterStatus(c,state)==='done').length;
+      const pct = Math.round(done/total*100);
+      ['hero-pct','hero-done-ch','hero-done-t'].forEach((id,i) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = [pct+'%', doneCh, done][i];
+      });
+      const b = document.getElementById('heroPbar'); if(b) b.style.width = pct+'%';
+      const l = document.getElementById('heroPbarLabel'); if(l) l.textContent = `${done} / ${total} topics completed`;
+    }
+
+    // ── Render ─────────────────────────────────────────────────────────────
+    function renderTopicDetail(t) {
+      const parts = [];
+      if (t.formula) {
+        parts.push(`<div class="td-formula">
+          <div class="td-formula-title">${t.formula.title}</div>
+          <div class="td-formula-lines">
+            ${t.formula.lines.map(l=>`<div class="td-formula-row">
+              <span class="td-formula-label">${l.label}</span>
+              <span class="td-formula-expr">${esc(l.expr)}</span>
+            </div>`).join('')}
+          </div>
+          ${t.formula.note?`<div class="td-formula-note">${t.formula.note}</div>`:''}
+        </div>`);
+      }
+      if (t.snippet) {
+        parts.push(`<div class="td-code" id="tdwrap-${t.id}">
+          <div class="td-code-header">
+            <span class="td-code-lang">C++</span>
+            <div class="td-code-actions">
+              <button class="copy-btn" onclick="copyCppCode('${t.id}',this)">Copy</button>
+            </div>
+          </div>
+        </div>`);
+      }
+      if (!parts.length) return '';
+      return `<div class="topic-detail" id="td-${t.id}">${parts.join('')}</div>`;
+    }
+
+    function renderChapters(state) {
+      const wrap = document.getElementById('cppChapters');
+      wrap.innerHTML = '';
+      const labels = {done:'Completed','in-progress':'In progress','not-started':'Not started'};
+      chapters.forEach((ch, ci) => {
+        const status = getChapterStatus(ch, state);
+        const doneCt = ch.topics.filter(t=>state[t.id]).length;
+        const pct    = Math.round(doneCt/ch.topics.length*100);
+        const topicsHtml = ch.topics.map(t => {
+          const hasDetail = !!(t.formula || t.snippet);
+          return `<div class="topic-row ${state[t.id]?'done':''}" id="tr-${t.id}">
+            <div class="topic-main ${hasDetail?'expandable':''}" ${hasDetail?`onclick="toggleCppTopic('${t.id}')"`:''}">
+              <button class="topic-check-btn ${state[t.id]?'checked':''}"
+                onclick="event.stopPropagation();toggleCppMark('${ch.id}','${t.id}')" aria-label="Mark done">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <span class="topic-text ${state[t.id]?'done-text':''}">${t.text}</span>
+              <span class="topic-tag-pill">${t.tag}</span>
+              ${hasDetail?'<span class="topic-expand-icon">▼</span>':''}
+            </div>
+            ${hasDetail?renderTopicDetail(t):''}
+          </div>`;
+        }).join('');
+
+        const div = document.createElement('div');
+        div.className = `rm-chapter status-${status}`;
+        div.id = `chapter-${ch.id}`;
+        div.innerHTML = `
+          <div class="rm-chapter-header" onclick="toggleCppChapter('${ch.id}')">
+            <div class="ch-num-badge">${ci+1}</div>
+            <div class="ch-info">
+              <div class="ch-title-row">
+                <span class="ch-name">${ch.title}</span>
+                <span class="ch-status-badge">${labels[status]}</span>
+              </div>
+              <div class="ch-meta-row">${ch.meta}</div>
+              <div class="ch-progress-mini">
+                <div class="ch-prog-track"><div class="ch-prog-fill" style="width:${pct}%"></div></div>
+                <span class="ch-prog-label">${doneCt}/${ch.topics.length}</span>
+              </div>
+            </div>
+            <span class="ch-arrow">▼</span>
+          </div>
+          <div class="rm-chapter-body" id="chbody-${ch.id}">
+            <div class="topics-list">${topicsHtml}</div>
+            ${ch.resources?.length?`<div class="resources-section"><p class="resources-title">Resources</p><div class="resource-links">${ch.resources.map(r=>`<a class="resource-link" href="${r.url}" target="_blank">${r.label}</a>`).join('')}</div></div>`:''}
+          </div>`;
+        wrap.appendChild(div);
+
+        // Inject C++ code blocks safely
+        ch.topics.forEach(t => {
+          if (t.snippet) {
+            const tdwrap = document.getElementById(`tdwrap-${t.id}`);
+            if (tdwrap) {
+              const pre = document.createElement('pre');
+              pre.className = 'code-block';
+              pre.id = `tcode-${t.id}`;
+              pre.innerHTML = highlightCpp(t.snippet);
+              tdwrap.appendChild(pre);
+            }
+          }
+        });
+      });
+    }
+
+    function renderSidebar(state) {
+      const nav = document.getElementById('cppSidebarNav');
+      nav.innerHTML = '';
+      chapters.forEach((ch, i) => {
+        const status = getChapterStatus(ch, state);
+        const li = document.createElement('li');
+        li.innerHTML = `<button class="rm-nav-link status-${status}" onclick="scrollToCppChapter('${ch.id}')">
+          <span class="rm-nav-num">${i+1}</span>${ch.title}</button>`;
+        nav.appendChild(li);
+      });
+    }
+
+    // ── DOM toggles ─────────────────────────────────────────────────────
+    window.toggleCppChapter = (id) => {
+      const body = document.getElementById(`chbody-${id}`);
+      const chEl = document.getElementById(`chapter-${id}`);
+      if (!body) return;
+      const opening = !body.classList.contains('open');
+      document.querySelectorAll('.rm-chapter-body.open').forEach(b => {
+        b.classList.remove('open'); b.closest('.rm-chapter')?.classList.remove('is-open');
+      });
+      if (opening) {
+        body.classList.add('open'); chEl?.classList.add('is-open');
+        setTimeout(() => chEl?.scrollIntoView({behavior:'smooth',block:'start'}), 50);
+      }
+    };
+    window.scrollToCppChapter = (id) => {
+      const body = document.getElementById(`chbody-${id}`);
+      const chEl = document.getElementById(`chapter-${id}`);
+      if (!body) return;
+      document.querySelectorAll('.rm-chapter-body.open').forEach(b => {
+        b.classList.remove('open'); b.closest('.rm-chapter')?.classList.remove('is-open');
+      });
+      body.classList.add('open'); chEl?.classList.add('is-open');
+      setTimeout(() => chEl?.scrollIntoView({behavior:'smooth',block:'start'}), 50);
+    };
+    window.toggleCppTopic = (topicId) => {
+      const row = document.getElementById(`tr-${topicId}`);
+      if (!row) return;
+      row.classList.toggle('topic-open', !row.classList.contains('topic-open'));
+      if (row.classList.contains('topic-open'))
+        setTimeout(() => row.scrollIntoView({behavior:'smooth',block:'nearest'}), 80);
+    };
+    window.toggleCppMark = (chId, topicId) => {
+      const state = loadState();
+      state[topicId] = !state[topicId];
+      saveState(state);
+      const isDone = !!state[topicId];
+      const row  = document.getElementById(`tr-${topicId}`);
+      const btn  = row?.querySelector('.topic-check-btn');
+      const text = row?.querySelector('.topic-text');
+      if (row)  row.classList.toggle('done', isDone);
+      if (btn)  btn.classList.toggle('checked', isDone);
+      if (text) text.classList.toggle('done-text', isDone);
+      const ch = chapters.find(c => c.id === chId);
+      const chEl = document.getElementById(`chapter-${chId}`);
+      if (ch && chEl) {
+        const doneCt = ch.topics.filter(t => state[t.id]).length;
+        const pct    = Math.round(doneCt/ch.topics.length*100);
+        const newSt  = doneCt===ch.topics.length?'done':doneCt>0?'in-progress':'not-started';
+        const lbs    = {done:'Completed','in-progress':'In progress','not-started':'Not started'};
+        const fill = chEl.querySelector('.ch-prog-fill'); if(fill) fill.style.width = pct+'%';
+        const lb   = chEl.querySelector('.ch-prog-label'); if(lb) lb.textContent = `${doneCt}/${ch.topics.length}`;
+        const bd   = chEl.querySelector('.ch-status-badge'); if(bd) bd.textContent = lbs[newSt];
+        chEl.className = chEl.className.replace(/status-\S+/,'') + ` status-${newSt}`;
+        const sb = document.querySelector(`#cppSidebarNav button[onclick*="${chId}"]`);
+        if (sb) sb.className = sb.className.replace(/status-\S+/,'') + ` status-${newSt}`;
+      }
+      updateStats(state);
+    };
+    window.copyCppCode = (topicId, btn) => {
+      const pre = document.getElementById(`tcode-${topicId}`);
+      navigator.clipboard.writeText(pre?.innerText || '').then(() => {
+        btn.textContent='Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent='Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    };
+
+    // ════════════════════════════════════════════════════════════════════
+    // C++ CURRICULUM DATA
+    // ════════════════════════════════════════════════════════════════════
+    const chapters = [
+      {
+        id: 'cpp-foundations',
+        title: 'C++ Foundations & Memory Model',
+        meta: 'Stack vs heap · Pointers · References · Value semantics',
+        topics: [
+          { id:'cpp-compile', text:'Compilation model: preprocessor → compiler → linker', tag:'Toolchain',
+            formula:{ title:'Compilation Pipeline',
+              lines:[
+                {label:'Preprocessor',  expr:'#include, #define, #ifdef → expanded .cpp'},
+                {label:'Compiler',      expr:'.cpp → .o  (machine code + symbol table)'},
+                {label:'Linker',        expr:'.o files → executable (resolves symbols)'},
+                {label:'Build systems', expr:'Make, CMake, Bazel — manage dependencies'},
+              ], note:'Understanding this prevents 80% of "undefined reference" link errors.' }},
+          { id:'cpp-stack-heap', text:'Stack vs heap memory — when to use each', tag:'Memory',
+            formula:{ title:'Stack vs Heap',
+              lines:[
+                {label:'Stack',  expr:'LIFO, automatic lifetime, fast, limited (~8MB)'},
+                {label:'Heap',   expr:'Manual/RAII lifetime, slow alloc, unlimited (RAM)'},
+                {label:'Stack',  expr:'int x = 5;  // automatic storage duration'},
+                {label:'Heap',   expr:'int* p = new int(5);  // dynamic storage duration'},
+              ], note:'Prefer stack allocation. Use heap only when lifetime outlasts scope or size is dynamic.' },
+            snippet:`// Stack vs heap demonstration
+int stack_var = 42;           // lives on stack, auto-freed
+int* heap_ptr = new int(42);  // lives on heap, must delete
+
+// Modern C++: use smart pointers — heap with auto-lifetime
+#include <memory>
+auto smart = std::make_unique<int>(42);  // heap, auto-freed
+
+// Dangerous: raw owning pointer
+int* raw = new int[1000];
+// ... do stuff
+delete[] raw;  // easy to forget → memory leak
+
+// Safe: RAII wrapper
+std::vector<int> v(1000);  // heap-backed, auto-freed in dtor
+std::cout << v.size() << std::endl;` },
+          { id:'cpp-pointers', text:'Pointers, references & pointer arithmetic', tag:'Memory',
+            formula:{ title:'Pointer Operations',
+              lines:[
+                {label:'Declaration', expr:'T* ptr;  T& ref = existing_var;'},
+                {label:'Address-of',  expr:'ptr = &var;  // ptr stores var\'s address'},
+                {label:'Dereference', expr:'*ptr = 10;   // modify value at address'},
+                {label:'Arithmetic',  expr:'ptr + n  ≡  address + n * sizeof(T)'},
+              ], note:'References are non-nullable aliases. Prefer references over raw pointers.' },
+            snippet:`#include <iostream>
+int x = 100;
+int& ref = x;   // reference — another name for x
+int* ptr = &x;  // pointer — stores address of x
+
+ref = 200;       // x is now 200
+*ptr = 300;      // x is now 300
+
+// Pointer arithmetic (common in AV for buffer processing)
+float buf[4] = {1.f, 2.f, 3.f, 4.f};
+float* p = buf;
+for (int i = 0; i < 4; ++i) {
+    std::cout << *(p + i) << " ";  // prints: 1 2 3 4
+}
+// Note: std::span<float> is the modern safe alternative` },
+          { id:'cpp-const', text:'const correctness — the most underused feature', tag:'Design',
+            snippet:`// const applies to the RIGHT — read right-to-left
+const int  x = 5;      // x is a const int
+int* const p = &x;     // p is a const pointer to int
+const int* q = &x;     // q is a pointer to const int
+const int* const r = &x; // r is a const pointer to const int
+
+class Sensor {
+    float value_;
+public:
+    // const member function — cannot modify *this
+    float getValue() const { return value_; }
+    void setValue(float v) { value_ = v; }  // non-const
+};
+
+// Rule of thumb: make everything const unless you need to modify it` },
+        ],
+        resources:[
+          {label:'CppReference — Storage Duration', url:'https://en.cppreference.com/w/cpp/language/storage_duration'},
+          {label:'Abseil Tips on Const', url:'https://abseil.io/tips/'},
+        ]
+      },
+      {
+        id: 'oop-design',
+        title: 'Object-Oriented Design',
+        meta: 'Classes · Inheritance · Polymorphism · SOLID principles',
+        topics: [
+          { id:'cpp-class', text:'Classes: constructors, destructors, member functions', tag:'OOP',
+            snippet:`#include <string>
+#include <iostream>
+
+class LidarSensor {
+public:
+    // Constructor: initialize resources
+    explicit LidarSensor(std::string name, int beams)
+        : name_(std::move(name)), beams_(beams) {
+        std::cout << "Sensor " << name_ << " initialized\n";
+    }
+
+    // Destructor: release resources
+    ~LidarSensor() {
+        std::cout << "Sensor " << name_ << " destroyed\n";
+    }
+
+    // Const accessor
+    const std::string& name() const { return name_; }
+    int beams() const { return beams_; }
+
+    // Mutating method
+    void setBeams(int n) { beams_ = n; }
+
+private:
+    std::string name_;
+    int beams_;
+};
+
+// Usage
+LidarSensor top("TOP_64", 64);
+std::cout << top.name() << " has " << top.beams() << " beams\n";` },
+          { id:'cpp-inherit', text:'Inheritance, virtual functions & polymorphism', tag:'OOP',
+            formula:{ title:'Runtime Polymorphism via vtable',
+              lines:[
+                {label:'vtable',   expr:'Compiler creates per-class table of virtual fn pointers'},
+                {label:'vptr',     expr:'Each object has hidden ptr → its class\'s vtable'},
+                {label:'Dispatch', expr:'obj->fn() → *vptr[fn_index]()  (one indirection)'},
+                {label:'Cost',     expr:'~1 cache miss per virtual call — avoid in tight loops'},
+              ], note:'Use virtual functions for architectural extensibility, not micro-optimization. Mark overrides with override.' },
+            snippet:`class PerceptionModule {
+public:
+    virtual ~PerceptionModule() = default;
+    virtual void process(const float* pts, int n) = 0; // pure virtual
+    virtual std::string name() const = 0;
+};
+
+class PointNetModule : public PerceptionModule {
+public:
+    void process(const float* pts, int n) override {
+        // ... run PointNet inference
+    }
+    std::string name() const override { return "PointNet"; }
+};
+
+class BEVFusionModule : public PerceptionModule {
+public:
+    void process(const float* pts, int n) override { /* ... */ }
+    std::string name() const override { return "BEVFusion"; }
+};
+
+// Polymorphic usage — caller doesn't know which module
+void runPipeline(PerceptionModule& mod, const float* pts, int n) {
+    std::cout << "Running " << mod.name() << "\n";
+    mod.process(pts, n);
+}` },
+          { id:'cpp-solid', text:'SOLID principles in C++ practice', tag:'Design',
+            formula:{ title:'SOLID',
+              lines:[
+                {label:'S — SRP', expr:'One class, one reason to change'},
+                {label:'O — OCP', expr:'Open for extension, closed for modification'},
+                {label:'L — LSP', expr:'Derived class usable wherever base class is'},
+                {label:'I — ISP', expr:'Prefer many small interfaces over one large one'},
+                {label:'D — DIP', expr:'Depend on abstractions, not concrete types'},
+              ], note:'In AV: SRP → separate Detector from Tracker. DIP → inject PerceptionModule, not PointNet directly.' }},
+          { id:'cpp-rule-of-five', text:'Rule of Zero / Three / Five', tag:'Memory',
+            formula:{ title:'Special Member Functions',
+              lines:[
+                {label:'Rule of Zero',  expr:'Let compiler generate all five — prefer RAII members'},
+                {label:'Rule of Three', expr:'If dtor needed: also define copy ctor + copy assign'},
+                {label:'Rule of Five',  expr:'Also define move ctor + move assign for efficiency'},
+                {label:'= delete',      expr:'Explicitly disable copying: Mutex, File handles'},
+              ], note:'If your class manages a resource (raw ptr, fd, lock), you need Rule of Five. Otherwise Rule of Zero.' },
+            snippet:`// Rule of Zero — let RAII members do the work
+class PointCloud {
+    std::vector<float> points_;  // vector handles memory
+    std::string frame_id_;       // string handles memory
+    // No custom dtor/copy/move needed — Rule of Zero!
+};
+
+// Rule of Five — class owns a raw resource
+class RawBuffer {
+    float* data_;
+    int size_;
+public:
+    RawBuffer(int n) : data_(new float[n]), size_(n) {}
+    ~RawBuffer()     { delete[] data_; }                 // dtor
+
+    RawBuffer(const RawBuffer& o)                        // copy ctor
+        : data_(new float[o.size_]), size_(o.size_) {
+        std::copy(o.data_, o.data_ + size_, data_);
+    }
+    RawBuffer& operator=(const RawBuffer& o) {           // copy assign
+        if (this != &o) { delete[] data_;
+            data_ = new float[o.size_]; size_ = o.size_;
+            std::copy(o.data_, o.data_ + size_, data_); }
+        return *this;
+    }
+    RawBuffer(RawBuffer&& o) noexcept                    // move ctor
+        : data_(o.data_), size_(o.size_) { o.data_=nullptr; o.size_=0; }
+    RawBuffer& operator=(RawBuffer&& o) noexcept {       // move assign
+        if (this != &o) { delete[] data_; data_=o.data_; size_=o.size_;
+            o.data_=nullptr; o.size_=0; }
+        return *this;
+    }
+};` },
+        ],
+        resources:[
+          {label:'CppCoreGuidelines',   url:'https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines'},
+          {label:'Back to Basics — SOLID', url:'https://www.youtube.com/results?search_query=cppcon+solid+principles'},
+        ]
+      },
+      {
+        id: 'modern-cpp',
+        title: 'Modern C++ (11/14/17/20)',
+        meta: 'Move semantics · Lambda · auto · Ranges · Concepts',
+        topics: [
+          { id:'cpp-move', text:'Move semantics & rvalue references', tag:'C++11',
+            formula:{ title:'Move Semantics',
+              lines:[
+                {label:'Lvalue', expr:'Named object: int x; string s;'},
+                {label:'Rvalue', expr:'Temporary: 42,  std::move(x),  fn()'},
+                {label:'Move',   expr:'Transfer ownership — O(1) instead of O(n) copy'},
+                {label:'Usage',  expr:'std::move(v)  →  calls T::T(T&&) move ctor'},
+              ], note:'Move is critical in AV: moving large point clouds (100k+ floats) between pipeline stages.' },
+            snippet:`#include <vector>
+#include <utility>  // std::move
+
+// Without move: copies all 100k floats
+void processCopy(std::vector<float> pts) { /* ... */ }
+
+// With move: O(1) pointer swap — no copy
+void processMove(std::vector<float>&& pts) { /* ... */ }
+
+std::vector<float> cloud(100'000);
+processCopy(cloud);             // copies 400KB
+processMove(std::move(cloud));  // moves pointer — O(1)
+// cloud is now empty (valid but unspecified state)
+
+// Perfect forwarding in templates
+template<typename T>
+void relay(T&& val) {
+    processMove(std::forward<T>(val));
+}` },
+          { id:'cpp-lambda', text:'Lambdas, std::function & closures', tag:'C++11',
+            snippet:`#include <algorithm>
+#include <vector>
+#include <functional>
+
+std::vector<float> distances = {5.f, 12.f, 3.f, 8.f, 1.f};
+
+// Lambda: [captures](params) -> return_type { body }
+float threshold = 7.f;
+auto nearby = std::count_if(distances.begin(), distances.end(),
+    [threshold](float d) { return d < threshold; });  // captures threshold
+
+// Storing lambdas
+std::function<float(float)> scale = [](float x) { return x * 0.5f; };
+
+// Generic lambda (C++14)
+auto print = [](const auto& x) { std::cout << x << "\n"; };
+
+// Mutable lambda — modifies captured copy
+int count = 0;
+auto counter = [count]() mutable { return ++count; };
+counter(); counter(); // count in closure = 2, original count = 0` },
+          { id:'cpp-auto-decltype', text:'Type deduction: auto, decltype, CTAD', tag:'C++11',
+            snippet:`// auto deduces type from initializer
+auto x = 42;            // int
+auto s = std::string("hello"); // string
+auto& ref = x;          // int&
+const auto& cref = x;   // const int&
+
+// Use auto for iterator types (saves 30+ chars)
+std::vector<std::pair<int,float>> data;
+for (const auto& [idx, val] : data) {  // C++17 structured bindings
+    std::cout << idx << ": " << val << "\n";
+}
+
+// decltype — type of expression without evaluating it
+decltype(x) y = 10;   // int
+
+// CTAD (C++17) — constructor template argument deduction
+std::pair p{1, 3.14};         // pair<int,double>
+std::vector v{1,2,3};         // vector<int>
+std::lock_guard lk{my_mutex}; // lock_guard<std::mutex>` },
+          { id:'cpp-concepts', text:'Templates, concepts & type constraints (C++20)', tag:'C++20',
+            formula:{ title:'Templates & Concepts',
+              lines:[
+                {label:'Template',  expr:'Generic code: compiled per instantiation (no vtable)'},
+                {label:'Concept',   expr:'Constrains template params: requires T::method()'},
+                {label:'SFINAE',    expr:'Old way: enable_if, is_same — verbose'},
+                {label:'Concepts',  expr:'New way: requires clauses — readable constraints'},
+              ], note:'Concepts replace SFINAE. Zero runtime cost — all resolved at compile time.' },
+            snippet:`#include <concepts>
+#include <cmath>
+
+// C++20 Concept definition
+template<typename T>
+concept Numeric = std::is_arithmetic_v<T>;
+
+template<typename T>
+concept PointCloud = requires(T p) {
+    { p.x() } -> std::convertible_to<float>;
+    { p.y() } -> std::convertible_to<float>;
+    { p.z() } -> std::convertible_to<float>;
+};
+
+// Constrained function template
+template<Numeric T>
+T euclidean_dist(T x1, T y1, T x2, T y2) {
+    return std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+}
+
+// Abbreviated function template (C++20)
+auto process(PointCloud auto& cloud) {
+    // works with any type satisfying PointCloud concept
+}` },
+        ],
+        resources:[
+          {label:'Scott Meyers — Effective Modern C++', url:'https://www.oreilly.com/library/view/effective-modern-c/9781491908419/'},
+          {label:'CppCon 2022 — C++20 Features', url:'https://www.youtube.com/c/CppCon'},
+        ]
+      },
+      {
+        id: 'memory-management',
+        title: 'Memory Management & RAII',
+        meta: 'Smart pointers · Custom allocators · Memory leaks · Sanitizers',
+        topics: [
+          { id:'cpp-smartptr', text:'unique_ptr, shared_ptr, weak_ptr — when to use each', tag:'RAII',
+            formula:{ title:'Smart Pointer Ownership Model',
+              lines:[
+                {label:'unique_ptr', expr:'Sole ownership — move-only, zero overhead vs raw ptr'},
+                {label:'shared_ptr', expr:'Shared ownership — ref-counted, ~2x memory overhead'},
+                {label:'weak_ptr',   expr:'Non-owning observer — breaks circular references'},
+                {label:'Default',    expr:'Prefer unique_ptr. Reach for shared_ptr only when needed.'},
+              ], note:'shared_ptr ref count is atomic — thread-safe count but NOT thread-safe data.' },
+            snippet:`#include <memory>
+
+// unique_ptr — single owner (use this by default)
+auto sensor = std::make_unique<LidarSensor>("TOP", 64);
+sensor->process();  // use like a raw pointer
+// auto s2 = sensor;   // ERROR: cannot copy unique_ptr
+auto s2 = std::move(sensor);  // OK: transfer ownership
+
+// shared_ptr — multiple owners
+auto shared = std::make_shared<LidarSensor>("SIDE", 32);
+auto copy   = shared;  // ref count = 2
+{
+    auto local = shared;  // ref count = 3
+}   // local destroyed, ref count = 2
+// shared destroyed → ref count = 0 → LidarSensor deleted
+
+// weak_ptr — break cycles (e.g. parent↔child)
+std::weak_ptr<LidarSensor> observer = shared;
+if (auto ptr = observer.lock()) {  // safely get shared_ptr
+    ptr->process();
+}` },
+          { id:'cpp-raii', text:'RAII pattern — resources as objects', tag:'RAII',
+            snippet:`// RAII: Resource Acquisition Is Initialization
+// Constructor acquires, Destructor releases — guaranteed cleanup
+
+class FileLogger {
+    std::ofstream file_;
+public:
+    explicit FileLogger(const std::string& path) : file_(path) {
+        if (!file_) throw std::runtime_error("Cannot open " + path);
+    }
+    ~FileLogger() { file_.close(); }  // guaranteed even if exception thrown
+
+    void log(const std::string& msg) { file_ << msg << "\n"; }
+    // Rule of Zero: delete copy, let move work naturally
+    FileLogger(const FileLogger&) = delete;
+    FileLogger& operator=(const FileLogger&) = delete;
+};
+
+// Scope-based mutex locking (RAII in stdlib)
+#include <mutex>
+std::mutex mtx;
+void thread_safe_fn() {
+    std::lock_guard<std::mutex> lock(mtx);  // acquires lock
+    // ... do work
+}  // lock released here — even on exception` },
+          { id:'cpp-sanitizers', text:'AddressSanitizer, Valgrind & memory debugging', tag:'Tools',
+            formula:{ title:'Memory Bug Tools',
+              lines:[
+                {label:'ASan',    expr:'g++ -fsanitize=address,undefined  — heap/stack bugs'},
+                {label:'TSan',    expr:'g++ -fsanitize=thread  — data races'},
+                {label:'Valgrind',expr:'valgrind --leak-check=full ./binary  — detailed leaks'},
+                {label:'Perf',    expr:'perf stat ./binary  — cache misses, branch mispred'},
+              ], note:'Run ASan in CI for every PR. It catches use-after-free instantly — bugs that Valgrind takes hours to find.' }},
+        ],
+        resources:[
+          {label:'Back to Basics: Smart Pointers (CppCon)', url:'https://www.youtube.com/results?search_query=cppcon+smart+pointers+back+to+basics'},
+          {label:'AddressSanitizer docs', url:'https://clang.llvm.org/docs/AddressSanitizer.html'},
+        ]
+      },
+      {
+        id: 'templates-generics',
+        title: 'Templates & Generic Programming',
+        meta: 'Function templates · Class templates · Metaprogramming · CRTP',
+        topics: [
+          { id:'cpp-func-template', text:'Function templates & template argument deduction', tag:'Templates',
+            snippet:`// Basic function template
+template<typename T>
+T clamp(T val, T lo, T hi) {
+    return val < lo ? lo : val > hi ? hi : val;
+}
+// Works for int, float, double — zero runtime cost
+auto x = clamp(3.5f, 0.f, 1.f);   // deduced T=float
+
+// Explicit specialization for a specific type
+template<>
+float clamp<float>(float val, float lo, float hi) {
+    // SIMD-optimized version for float
+    return std::clamp(val, lo, hi);
+}
+
+// Non-type template parameters
+template<int N>
+struct EigenVector {
+    float data[N];
+    float dot(const EigenVector<N>& other) const {
+        float sum = 0;
+        for (int i = 0; i < N; ++i) sum += data[i]*other.data[i];
+        return sum;
+    }
+};
+EigenVector<3> v3;  // 3D vector, N known at compile time` },
+          { id:'cpp-crtp', text:'CRTP — Curiously Recurring Template Pattern', tag:'Templates',
+            formula:{ title:'CRTP vs Virtual Dispatch',
+              lines:[
+                {label:'Virtual', expr:'Runtime dispatch via vtable — 1 indirection per call'},
+                {label:'CRTP',    expr:'Compile-time dispatch — inlined, zero overhead'},
+                {label:'Pattern', expr:'template<class D> class Base { D& self(){return *(D*)this;} }'},
+                {label:'Use when',expr:'Hot path (sensor processing), static interface contracts'},
+              ], note:'AV: CRTP is common in Eigen (matrix library) and fast geometry kernels.' },
+            snippet:`// CRTP base provides common interface, zero virtual overhead
+template<class Derived>
+class PerceptionBase {
+public:
+    void preprocess(const float* pts, int n) {
+        static_cast<Derived*>(this)->preprocess_impl(pts, n);
+    }
+    void postprocess() {
+        static_cast<Derived*>(this)->postprocess_impl();
+    }
+};
+
+class FastDetector : public PerceptionBase<FastDetector> {
+public:
+    void preprocess_impl(const float* pts, int n) { /* SIMD op */ }
+    void postprocess_impl() { /* NMS */ }
+};
+
+// Called polymorphically but resolved at compile time — no vtable
+template<class D>
+void runModule(PerceptionBase<D>& mod, const float* pts, int n) {
+    mod.preprocess(pts, n);
+    mod.postprocess();
+}` },
+          { id:'cpp-variadic', text:'Variadic templates & fold expressions', tag:'C++17',
+            snippet:`// Variadic template: accepts any number of args
+template<typename... Args>
+void log(Args&&... args) {
+    (std::cout << ... << args) << "\n";  // C++17 fold expression
+}
+log("Point(", 1.0f, ", ", 2.0f, ", ", 3.0f, ")");
+
+// Compile-time sum of heterogeneous types
+template<typename... Ts>
+auto sum(Ts... vals) {
+    return (vals + ...);  // fold expression over +
+}
+auto total = sum(1, 2.5, 3.0f);  // int + double + float → double
+
+// Tuple iteration with index_sequence
+template<typename Tuple, std::size_t... Is>
+void print_tuple_impl(const Tuple& t, std::index_sequence<Is...>) {
+    ((std::cout << std::get<Is>(t) << " "), ...);
+}` },
+        ],
+        resources:[
+          {label:'Template Metaprogramming (Vandevoorde)', url:'https://www.oreilly.com/library/view/c-templates-the/9780321714121/'},
+          {label:'CppCon — Template Argument Deduction', url:'https://www.youtube.com/c/CppCon'},
+        ]
+      },
+      {
+        id: 'concurrency',
+        title: 'Concurrency & Multithreading',
+        meta: 'std::thread · Mutex · Atomics · Lock-free · Memory ordering',
+        topics: [
+          { id:'cpp-thread', text:'std::thread, std::async & thread lifecycle', tag:'Concurrency',
+            snippet:`#include <thread>
+#include <future>
+#include <iostream>
+
+// Basic thread — fire and join
+void processBatch(int id) {
+    std::cout << "Thread " << id << " processing\n";
+}
+
+std::thread t1(processBatch, 1);
+std::thread t2(processBatch, 2);
+t1.join();  // wait for t1
+t2.join();  // wait for t2
+
+// std::async — easier future-based async
+auto future = std::async(std::launch::async, [] {
+    // Heavy computation in background
+    return computeDetections();
+});
+// ... do other work ...
+auto results = future.get();  // blocks until done
+
+// Thread pool pattern (AV: process sensor frames concurrently)
+#include <execution>
+std::vector<Frame> frames = loadFrames();
+std::for_each(std::execution::par_unseq,
+    frames.begin(), frames.end(), process);` },
+          { id:'cpp-mutex', text:'mutex, lock_guard & condition_variable', tag:'Concurrency',
+            snippet:`#include <mutex>
+#include <condition_variable>
+#include <queue>
+
+// Thread-safe queue (producer-consumer pattern)
+// Common in AV: sensor thread → processing thread
+template<typename T>
+class SafeQueue {
+    std::queue<T> q_;
+    std::mutex mtx_;
+    std::condition_variable cv_;
+
+public:
+    void push(T item) {
+        {
+            std::lock_guard<std::mutex> lk(mtx_);
+            q_.push(std::move(item));
+        }
+        cv_.notify_one();  // wake waiting consumer
+    }
+
+    T pop() {
+        std::unique_lock<std::mutex> lk(mtx_);
+        cv_.wait(lk, [this]{ return !q_.empty(); });
+        T item = std::move(q_.front());
+        q_.pop();
+        return item;
+    }
+};
+
+SafeQueue<PointCloud> lidar_buffer;
+// Sensor thread: lidar_buffer.push(frame);
+// Processing thread: auto frame = lidar_buffer.pop();` },
+          { id:'cpp-atomics', text:'Atomics & memory ordering', tag:'Concurrency',
+            formula:{ title:'Memory Ordering',
+              lines:[
+                {label:'relaxed', expr:'No ordering guarantees — fastest (counter, stats)'},
+                {label:'acquire', expr:'No reads/writes moved before — load side'},
+                {label:'release', expr:'No reads/writes moved after — store side'},
+                {label:'seq_cst', expr:'Total order — safest, default, most expensive'},
+              ], note:'AV: use seq_cst (default) unless profiling shows it\'s a bottleneck.' },
+            snippet:`#include <atomic>
+
+// Lock-free frame counter
+std::atomic<int> frame_count{0};
+std::atomic<bool> running{true};
+
+// Thread A: increment
+frame_count.fetch_add(1, std::memory_order_relaxed);
+
+// Thread B: read
+int current = frame_count.load(std::memory_order_relaxed);
+
+// Publish/subscribe with acquire-release
+std::atomic<PointCloud*> latest{nullptr};
+
+// Producer (sensor thread)
+PointCloud* pc = new PointCloud(/* data */);
+latest.store(pc, std::memory_order_release);  // publish
+
+// Consumer (processing thread)
+PointCloud* pc = latest.load(std::memory_order_acquire);  // read
+if (pc) { process(*pc); }` },
+        ],
+        resources:[
+          {label:'Anthony Williams — C++ Concurrency in Action', url:'https://www.manning.com/books/c-plus-plus-concurrency-in-action-second-edition'},
+          {label:'CppCon — Atomic Weapons', url:'https://www.youtube.com/results?search_query=herb+sutter+atomic+weapons'},
+        ]
+      },
+      {
+        id: 'performance',
+        title: 'Performance & Systems Patterns',
+        meta: 'Cache efficiency · SIMD · Custom allocators · Profiling',
+        topics: [
+          { id:'cpp-cache', text:'Cache-friendly data structures & access patterns', tag:'Perf',
+            formula:{ title:'Memory Hierarchy',
+              lines:[
+                {label:'L1 cache', expr:'~4 cycles,  32KB  — keep hot data here'},
+                {label:'L2 cache', expr:'~12 cycles, 256KB — next level'},
+                {label:'L3 cache', expr:'~40 cycles,  8MB  — shared across cores'},
+                {label:'RAM',      expr:'~200 cycles — cache miss penalty'},
+              ], note:'AV: process points in SoA layout (x[],y[],z[]) not AoS (Point{x,y,z}[]) for SIMD vectorization.' },
+            snippet:`// AoS (Array of Structures) — bad for SIMD
+struct Point { float x, y, z; };
+std::vector<Point> aos(N);  // x,y,z,x,y,z,x,y,z — mixed in cache
+
+// SoA (Structure of Arrays) — SIMD-friendly
+struct PointCloud {
+    std::vector<float> x, y, z;  // x,x,x... | y,y,y... | z,z,z...
+};
+
+// Benchmark: norm computation
+// AoS: random access pattern, poor vectorization
+float norm_aos(const std::vector<Point>& pts) {
+    float s = 0;
+    for (const auto& p : pts) s += p.x*p.x + p.y*p.y + p.z*p.z;
+    return s;
+}
+
+// SoA: sequential access, auto-vectorized by compiler
+float norm_soa(const PointCloud& pts) {
+    float s = 0;
+    const int n = pts.x.size();
+    for (int i = 0; i < n; ++i)
+        s += pts.x[i]*pts.x[i] + pts.y[i]*pts.y[i] + pts.z[i]*pts.z[i];
+    return s;  // compiler generates AVX/SSE instructions
+}` },
+          { id:'cpp-profiling', text:'Profiling with perf, gprof & Tracy', tag:'Tools',
+            formula:{ title:'Profiling Workflow',
+              lines:[
+                {label:'1. Measure', expr:'perf stat ./binary  — instruction counts, cache misses'},
+                {label:'2. Profile', expr:'perf record ./binary && perf report — hotspots'},
+                {label:'3. Flame',   expr:'FlameGraph: stack traces → visual call tree'},
+                {label:'4. Fix',     expr:'Optimize the top 3 hotspots — 80/20 rule applies'},
+              ], note:'Never optimize without profiling first. The bottleneck is almost never where you think it is.' }},
+          { id:'cpp-constexpr', text:'constexpr, consteval & compile-time computation', tag:'C++20',
+            snippet:`#include <array>
+
+// constexpr: evaluated at compile time if possible
+constexpr float DEG_TO_RAD = 3.14159265358979f / 180.f;
+
+// constexpr function
+constexpr int factorial(int n) {
+    return n <= 1 ? 1 : n * factorial(n-1);
+}
+static_assert(factorial(5) == 120);  // compile-time check
+
+// Compile-time LUT (lookup table) — common in AV for trig
+constexpr std::array<float, 360> make_sin_table() {
+    std::array<float, 360> t{};
+    for (int i = 0; i < 360; ++i)
+        t[i] = /* sin approximation */0.f;  // simplified
+    return t;
+}
+constexpr auto SIN_TABLE = make_sin_table();  // compiled in
+
+// consteval: MUST be evaluated at compile time (C++20)
+consteval int beam_count(const char* model) {
+    if (model[0]=='6') return 64;
+    if (model[0]=='3') return 32;
+    return 16;
+}
+static_assert(beam_count("64E") == 64);` },
+        ],
+        resources:[
+          {label:'Agner Fog — Optimizing C++', url:'https://www.agner.org/optimize/'},
+          {label:'Tracy Profiler (real-time)', url:'https://github.com/wolfpld/tracy'},
+        ]
+      },
+      {
+        id: 'av-patterns',
+        title: 'C++ Patterns in Autonomous Driving',
+        meta: 'ROS2 nodes · Protocol Buffers · Eigen · Production AV C++',
+        topics: [
+          { id:'cpp-eigen', text:'Eigen for linear algebra & geometry', tag:'AV',
+            snippet:`#include <Eigen/Dense>
+
+// Eigen core types
+Eigen::Matrix3f R;   // 3x3 float matrix
+Eigen::Vector3f t;   // 3D float vector
+Eigen::Matrix4f T;   // 4x4 transform (homogeneous)
+
+// 3D rotation from axis-angle
+Eigen::AngleAxisf rot(M_PI/4, Eigen::Vector3f::UnitZ()); // 45° around Z
+R = rot.toRotationMatrix();
+
+// Transform a point cloud
+Eigen::MatrixXf pts(3, 100);  // 3xN matrix of LiDAR points
+pts = R * pts + t.replicate(1, 100);  // broadcast translation
+
+// Rigid body transform composition
+Eigen::Isometry3f cam_to_lidar = Eigen::Isometry3f::Identity();
+cam_to_lidar.rotate(R);
+cam_to_lidar.translate(t);
+
+Eigen::Vector3f pt_lidar(10.f, 3.f, 1.f);
+Eigen::Vector3f pt_cam = cam_to_lidar * pt_lidar;
+
+// Least-squares via SVD (used in ICP point cloud registration)
+Eigen::JacobiSVD<Eigen::MatrixXf> svd(A, Eigen::ComputeThinU|Eigen::ComputeThinV);
+Eigen::VectorXf x = svd.solve(b);` },
+          { id:'cpp-protobuf', text:'Protocol Buffers for sensor data serialization', tag:'AV',
+            formula:{ title:'Protobuf vs JSON/XML',
+              lines:[
+                {label:'Size',   expr:'Proto ~5-10x smaller than JSON for same data'},
+                {label:'Speed',  expr:'Parse 10-100x faster than JSON'},
+                {label:'Schema', expr:'.proto file defines message structure — versioned'},
+                {label:'Waymo',  expr:'Waymo Open Dataset uses proto3 for all frames'},
+              ], note:'Waymo: Frame contains repeated CameraImage and LaserLabel messages in proto3 format.' }},
+          { id:'cpp-ros2', text:'ROS2 node architecture in C++', tag:'AV',
+            snippet:`#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+
+// ROS2 node: subscribes to LiDAR topic, publishes detections
+class PerceptionNode : public rclcpp::Node {
+public:
+    PerceptionNode() : Node("perception_node") {
+        // Subscriber with QoS — sensor data drops oldest if buffer full
+        auto qos = rclcpp::SensorDataQoS();
+        sub_ = create_subscription<sensor_msgs::msg::PointCloud2>(
+            "/lidar/top/points", qos,
+            [this](const sensor_msgs::msg::PointCloud2::SharedPtr msg) {
+                onPointCloud(msg);
+            });
+
+        // Publisher
+        pub_ = create_publisher<visualization_msgs::msg::MarkerArray>(
+            "/detections", 10);
+
+        RCLCPP_INFO(get_logger(), "PerceptionNode ready");
+    }
+
+private:
+    void onPointCloud(const sensor_msgs::msg::PointCloud2::SharedPtr msg) {
+        // Convert → run model → publish
+        auto dets = detector_.run(*msg);
+        pub_->publish(dets);
+    }
+
+    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_;
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr pub_;
+    Detector detector_;
+};` },
+          { id:'cpp-design-patterns', text:'Design patterns in AV C++ codebases', tag:'Design',
+            formula:{ title:'Most Used Patterns in AV C++',
+              lines:[
+                {label:'Factory',   expr:'Create detector/tracker without knowing concrete type'},
+                {label:'Observer',  expr:'Sensor data callbacks — decouple producer/consumer'},
+                {label:'Strategy',  expr:'Swap NMS algorithm at runtime without changing caller'},
+                {label:'Pipeline',  expr:'Chain: Preprocess → Detect → Track → Fuse → Publish'},
+              ], note:'Avoid overengineering. YAGNI — You Aren\'t Gonna Need It. Use patterns when a specific pain emerges.' }},
+        ],
+        resources:[
+          {label:'Eigen documentation',  url:'https://eigen.tuxfamily.org/dox/'},
+          {label:'ROS2 C++ tutorials', url:'https://docs.ros.org/en/rolling/Tutorials.html'},
+          {label:'Protocol Buffers Language Guide', url:'https://protobuf.dev/programming-guides/proto3/'},
+        ]
+      },
+    ];
+
+    function init() {
+      const state = loadState();
+      renderChapters(state);
+      renderSidebar(state);
+      updateStats(state);
+      if (localStorage.getItem(STORAGE_KEY)) {
+        const el = document.getElementById('lastUpdated');
+        if (el) el.textContent = 'Previously saved';
+      }
+    }
+    init();
+  })();
+  </script>
+</body>
+</html>
