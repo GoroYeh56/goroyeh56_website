@@ -159,14 +159,31 @@
     .copy-btn.copied { border-color:#2e7d32; color:#2e7d32; }
     .code-block { background:#0d1117; color:#e6edf3; padding:1rem 1.2rem; font-family:'SF Mono','Fira Code','Consolas',monospace; font-size:.81rem; line-height:1.7; overflow-x:auto; margin:0; border-radius:var(--radius-sm); }
 
-    /* C++ specific syntax colors */
-    .cpp-kw   { color:#ff7b72; }
-    .cpp-type { color:#ffa657; }
-    .cpp-fn   { color:#d2a8ff; }
-    .cpp-str  { color:#a5d6ff; }
-    .cpp-num  { color:#79c0ff; }
-    .cpp-cm   { color:#8b949e; font-style:italic; }
-    .cpp-pre  { color:#ffa657; }
+    /* ── Practice Editor (same as ml-roadmap) ── */
+    .td-code-actions { display:flex; gap:6px; align-items:center; }
+    .practice-btn { font-size:.73rem; padding:3px 10px; border:1px solid var(--gold); border-radius:var(--radius-sm); color:var(--gold); background:transparent; cursor:pointer; transition:all var(--transition); font-family:'DM Sans',sans-serif; white-space:nowrap; }
+    .practice-btn:hover { background:var(--gold); color:white; }
+    .editor-panel { display:none; border-top:1px solid var(--border); background:#0d1117; }
+    .editor-panel.open { display:block; }
+    .editor-toolbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:.45rem 1rem; background:#161b22; border-bottom:1px solid rgba(255,255,255,.08); }
+    .editor-toolbar-label { font-size:.7rem; color:rgba(255,255,255,.35); flex:1; font-family:monospace; }
+    .run-btn { display:inline-flex; align-items:center; gap:5px; font-size:.78rem; padding:4px 14px; background:#238636; color:white; border:none; border-radius:4px; cursor:pointer; transition:background .15s; font-family:'DM Sans',sans-serif; }
+    .run-btn:hover { background:#2ea043; }
+    .run-btn:disabled { background:#444; cursor:not-allowed; }
+    .run-btn svg { width:11px; height:11px; }
+    .clear-btn { font-size:.73rem; padding:4px 10px; background:transparent; color:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.12); border-radius:4px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .clear-btn:hover { color:rgba(255,255,255,.7); }
+    .editor-wrap { position:relative; background:#0d1117; }
+    .editor-highlighted { position:absolute; top:0; left:0; right:0; bottom:0; font-family:'SF Mono','Fira Code','Consolas',monospace; font-size:.81rem; line-height:1.7; padding:.9rem 1.2rem; pointer-events:none; white-space:pre-wrap; word-break:break-word; overflow:hidden; color:#e6edf3; border:none; margin:0; tab-size:4; box-sizing:border-box; }
+    .editor-textarea { position:relative; z-index:1; color:transparent !important; caret-color:#e6edf3 !important; background:transparent !important; width:100%; min-height:200px; border:none; outline:none; resize:vertical; font-family:'SF Mono','Fira Code','Consolas',monospace; font-size:.81rem; line-height:1.7; padding:.9rem 1.2rem; tab-size:4; box-sizing:border-box; white-space:pre-wrap; word-wrap:break-word; }
+    .editor-textarea::selection { background:rgba(56,139,253,.4); color:transparent; }
+    .editor-output { border-top:1px solid rgba(255,255,255,.07); min-height:34px; max-height:340px; overflow-y:auto; }
+    .out-line { font-family:'SF Mono','Fira Code','Consolas',monospace; font-size:.79rem; line-height:1.65; padding:0 1.2rem; color:#e6edf3; white-space:pre; display:block; }
+    .out-line:first-child { padding-top:.7rem; }
+    .out-line:last-child { padding-bottom:.7rem; }
+    .out-line.err  { color:#f85149; }
+    .out-line.info { color:#8b949e; font-style:italic; }
+    .out-line-num  { color:#484f58; font-size:.72rem; margin-right:.75rem; user-select:none; min-width:1.5rem; display:inline-block; text-align:right; }
 
     /* Resources */
     .resources-section { border-top:1px solid var(--border); padding:1rem 1.25rem; }
@@ -274,7 +291,9 @@
   (() => {
     const STORAGE_KEY = 'goroyeh56-cpp-roadmap-v1';
 
-    // ── C++ Syntax Highlighter ───────────────────────────────────────────
+    // ════════════════════════════════════════════════════════════════════
+    // C++ SYNTAX HIGHLIGHTER (single-pass tokenizer — correct output)
+    // ════════════════════════════════════════════════════════════════════
     const CPP_KW = new Set(['alignas','alignof','and','and_eq','asm','auto','bitand','bitor',
       'bool','break','case','catch','char','char8_t','char16_t','char32_t','class','compl',
       'concept','const','consteval','constexpr','constinit','const_cast','continue','co_await',
@@ -293,41 +312,220 @@
       'uint16_t','uint32_t','uint64_t','int8_t','int16_t','int32_t','int64_t'
     ]);
 
-    function highlightCpp(code) {
-      return code.split('\n').map(line => {
-        // Comments
-        const ci = line.indexOf('//');
-        let code_part = ci >= 0 ? line.slice(0, ci) : line;
-        let cm_part   = ci >= 0 ? `<span class="cpp-cm">${esc(line.slice(ci))}</span>` : '';
-        // Preprocessor
-        const trimmed = code_part.trimStart();
-        if (trimmed.startsWith('#')) {
-          return `<span class="cpp-pre">${esc(code_part)}</span>${cm_part}`;
-        }
-        // Tokenize
-        code_part = code_part.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,
-          m => `<span class="cpp-str">${esc(m)}</span>`);
-        code_part = code_part.replace(/\b(\d+\.?\d*[uUlLfF]*|0x[0-9a-fA-F]+)\b/g,
-          m => `<span class="cpp-num">${esc(m)}</span>`);
-        code_part = code_part.replace(/\b([A-Za-z_][A-Za-z0-9_]*)\b/g, (m, w) => {
-          if (CPP_KW.has(w))    return `<span class="cpp-kw">${esc(w)}</span>`;
-          if (CPP_TYPES.has(w)) return `<span class="cpp-type">${esc(w)}</span>`;
-          return esc(w);
-        });
-        // Function calls (word followed by '(')
-        code_part = code_part.replace(/\b([A-Za-z_][A-Za-z0-9_]*)(\s*\()/g, (m, fn, paren) => {
-          if (m.includes('cpp-kw') || m.includes('cpp-type')) return m;
-          return `<span class="cpp-fn">${esc(fn)}</span>${paren}`;
-        });
-        return code_part + cm_part;
-      }).join('\n');
+    // Color map (using inline styles — no class injection issues)
+    const CPP_COLORS = {
+      kw: '#ff7b72', type: '#ffa657', fn: '#d2a8ff',
+      str: '#a5d6ff', num: '#79c0ff', cm: '#8b949e', pre: '#ffa657'
+    };
+    function cspan(color, text, italic) {
+      return `<span style="color:${color}${italic?';font-style:italic':''}">${esc(text)}</span>`;
     }
-
     function esc(s) {
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
-    // ── State ─────────────────────────────────────────────────────────────
+    function highlightCpp(code) {
+      return code.split('\n').map(line => tokenizeCppLine(line)).join('\n');
+    }
+
+    function tokenizeCppLine(line) {
+      // Preprocessor: entire line is one token
+      if (line.trimStart().startsWith('#')) {
+        const ci = line.indexOf('//');
+        if (ci >= 0) {
+          return cspan(CPP_COLORS.pre, line.slice(0, ci)) +
+                 cspan(CPP_COLORS.cm, line.slice(ci), true);
+        }
+        return cspan(CPP_COLORS.pre, line);
+      }
+
+      const out = [];
+      let i = 0;
+      const n = line.length;
+
+      while (i < n) {
+        const c = line[i];
+
+        // Line comment
+        if (c === '/' && line[i+1] === '/') {
+          out.push(cspan(CPP_COLORS.cm, line.slice(i), true));
+          break;
+        }
+        // Block comment (single line portion)
+        if (c === '/' && line[i+1] === '*') {
+          let j = i + 2;
+          while (j < n - 1 && !(line[j] === '*' && line[j+1] === '/')) j++;
+          j = j + 2 > n ? n : j + 2;
+          out.push(cspan(CPP_COLORS.cm, line.slice(i, j), true));
+          i = j; continue;
+        }
+        // String literal
+        if (c === '"') {
+          let j = i + 1;
+          while (j < n && !(line[j] === '"' && line[j-1] !== '\\')) j++;
+          j = j + 1 > n ? n : j + 1;
+          out.push(cspan(CPP_COLORS.str, line.slice(i, j)));
+          i = j; continue;
+        }
+        // Char literal
+        if (c === "'") {
+          let j = i + 1;
+          while (j < n && !(line[j] === "'" && line[j-1] !== '\\')) j++;
+          j = j + 1 > n ? n : j + 1;
+          out.push(cspan(CPP_COLORS.str, line.slice(i, j)));
+          i = j; continue;
+        }
+        // Number: integer, float, hex — must start at word boundary
+        const prevIsAlNum = i > 0 && /[\w]/.test(line[i-1]);
+        if (!prevIsAlNum && (c >= '0' && c <= '9')) {
+          let j = i;
+          if (line[j] === '0' && (line[j+1] === 'x' || line[j+1] === 'X')) {
+            j += 2;
+            while (j < n && /[0-9a-fA-F_]/.test(line[j])) j++;
+          } else {
+            while (j < n && (/[0-9]/.test(line[j]) || line[j] === '.')) j++;
+          }
+          while (j < n && 'uUlLfF'.includes(line[j])) j++;
+          out.push(cspan(CPP_COLORS.num, line.slice(i, j)));
+          i = j; continue;
+        }
+        // Identifier
+        if (/[a-zA-Z_]/.test(c)) {
+          let j = i;
+          while (j < n && /[\w]/.test(line[j])) j++;
+          const word = line.slice(i, j);
+          // Is it followed by '(' (after optional whitespace)?
+          const after = line.slice(j).trimStart();
+          const isCall = after.startsWith('(');
+          if (CPP_KW.has(word))        out.push(cspan(CPP_COLORS.kw,   word));
+          else if (CPP_TYPES.has(word)) out.push(cspan(CPP_COLORS.type, word));
+          else if (isCall)              out.push(cspan(CPP_COLORS.fn,   word));
+          else                          out.push(esc(word));
+          i = j; continue;
+        }
+        // Everything else: operators, punctuation, whitespace
+        out.push(esc(c));
+        i++;
+      }
+      return out.join('');
+    }
+
+    // ════════════════════════════════════════════════════════════════════
+    // C++ RUNNER via Piston API (g++ C++17)
+    // ════════════════════════════════════════════════════════════════════
+    async function runCpp(code, outputEl) {
+      outputEl.innerHTML = '<span class="out-line info">⏳ Compiling & running C++17…</span>';
+      try {
+        const res = await fetch('https://emkc.org/api/v2/piston/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            language: 'c++',
+            version: '10.2.0',
+            files: [{ name: 'main.cpp', content: code }],
+            compile_args: ['-std=c++17', '-O2'],
+          }),
+          signal: AbortSignal.timeout(20000),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        const compile_err = (data.compile?.stderr || '').trim();
+        const run_out     = (data.run?.stdout     || '').trim();
+        const run_err     = (data.run?.stderr      || '').trim();
+        const exit_code   = data.run?.code ?? data.compile?.code ?? -1;
+
+        let html = '';
+        if (compile_err) {
+          html += compile_err.split('\n').map((l, i) =>
+            `<span class="out-line err"><span class="out-line-num">${i+1}</span>${esc(l)}</span>`
+          ).join('\n') + '\n';
+        }
+        const output = run_out + (run_err ? (run_out ? '\n' : '') + run_err : '');
+        if (output) {
+          html += output.split('\n').map((l, i) =>
+            `<span class="out-line${run_err && !run_out ? ' err' : ''}"><span class="out-line-num">${i+1}</span>${esc(l)}</span>`
+          ).join('\n');
+        }
+        if (!html) {
+          html = exit_code === 0
+            ? '<span class="out-line info">✓ Compiled & ran (no output)</span>'
+            : `<span class="out-line err">✗ Exit code ${exit_code}</span>`;
+        }
+        outputEl.innerHTML = html;
+      } catch(e) {
+        outputEl.innerHTML = `<span class="out-line err">❌ ${esc(e.message)}</span>
+<span class="out-line info" style="display:block;margin-top:4px;line-height:2">Try: <a href="https://godbolt.org" target="_blank" style="color:#79c0ff">Compiler Explorer ↗</a> &nbsp; <a href="https://replit.com/new/cpp17" target="_blank" style="color:#79c0ff">Replit C++ ↗</a></span>`;
+      }
+    }
+
+    // ── Practice editor factory ──────────────────────────────────────────
+    function createCppEditorPanel(topicId, code) {
+      const div = document.createElement('div');
+      div.className = 'editor-panel';
+      div.id = `editor-${topicId}`;
+      div.innerHTML = `
+        <div class="editor-toolbar">
+          <span class="editor-toolbar-label">C++17 — edit &amp; run</span>
+          <button class="clear-btn" onclick="clearCppOut('${topicId}')">Clear</button>
+          <button class="run-btn" id="runbtn-${topicId}" onclick="runCppCode('${topicId}')">
+            <svg viewBox="0 0 12 12" fill="currentColor"><polygon points="2,1 11,6 2,11"/></svg> Run
+          </button>
+        </div>
+        <div class="editor-wrap">
+          <div class="editor-highlighted" id="hl-${topicId}">${highlightCpp(code)}
+</div>
+          <textarea class="editor-textarea" id="edtxt-${topicId}" spellcheck="false"
+            oninput="syncCppHL('${topicId}')"
+            onscroll="syncCppScroll('${topicId}')">${esc(code)}</textarea>
+        </div>
+        <div class="editor-output" id="edout-${topicId}">
+          <span class="out-line info">Click ▷ Run to compile &amp; execute</span>
+        </div>`;
+      return div;
+    }
+
+    window.syncCppHL = (id) => {
+      const ta = document.getElementById(`edtxt-${id}`);
+      const hl = document.getElementById(`hl-${id}`);
+      if (ta && hl) { hl.innerHTML = highlightCpp(ta.value) + '\n'; hl.scrollTop = ta.scrollTop; }
+    };
+    window.syncCppScroll = (id) => {
+      const ta = document.getElementById(`edtxt-${id}`);
+      const hl = document.getElementById(`hl-${id}`);
+      if (ta && hl) hl.scrollTop = ta.scrollTop;
+    };
+    window.toggleCppEditor = (id) => {
+      const p = document.getElementById(`editor-${id}`);
+      if (!p) return;
+      p.classList.toggle('open', !p.classList.contains('open'));
+      if (p.classList.contains('open'))
+        setTimeout(() => p.scrollIntoView({behavior:'smooth',block:'nearest'}), 100);
+    };
+    window.runCppCode = async (id) => {
+      const ta = document.getElementById(`edtxt-${id}`);
+      const out = document.getElementById(`edout-${id}`);
+      const btn = document.getElementById(`runbtn-${id}`);
+      if (!ta||!out||!btn) return;
+      btn.disabled = true; btn.innerHTML = '⏳ Compiling…';
+      await runCpp(ta.value, out);
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 12 12" fill="currentColor"><polygon points="2,1 11,6 2,11"/></svg> Run';
+    };
+    window.clearCppOut = (id) => {
+      const out = document.getElementById(`edout-${id}`);
+      if (out) out.innerHTML = '<span class="out-line info">Click ▷ Run to compile &amp; execute</span>';
+    };
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Tab' && e.target.classList.contains('editor-textarea')) {
+        e.preventDefault();
+        const ta = e.target, s = ta.selectionStart;
+        ta.value = ta.value.substring(0,s) + '    ' + ta.value.substring(ta.selectionEnd);
+        ta.selectionStart = ta.selectionEnd = s + 4;
+        syncCppHL(ta.id.replace('edtxt-',''));
+      }
+    });
+
     function loadState() {
       try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
       catch { return {}; }
@@ -372,9 +570,10 @@
       if (t.snippet) {
         parts.push(`<div class="td-code" id="tdwrap-${t.id}">
           <div class="td-code-header">
-            <span class="td-code-lang">C++</span>
+            <span class="td-code-lang">C++17</span>
             <div class="td-code-actions">
               <button class="copy-btn" onclick="copyCppCode('${t.id}',this)">Copy</button>
+              <button class="practice-btn" onclick="toggleCppEditor('${t.id}')">▷ Practice</button>
             </div>
           </div>
         </div>`);
@@ -434,16 +633,19 @@
           </div>`;
         wrap.appendChild(div);
 
-        // Inject C++ code blocks safely
+        // Inject C++ code blocks + editor panels safely (no template literal issues)
         ch.topics.forEach(t => {
           if (t.snippet) {
             const tdwrap = document.getElementById(`tdwrap-${t.id}`);
             if (tdwrap) {
+              // Syntax-highlighted read-only preview
               const pre = document.createElement('pre');
               pre.className = 'code-block';
               pre.id = `tcode-${t.id}`;
               pre.innerHTML = highlightCpp(t.snippet);
               tdwrap.appendChild(pre);
+              // Practice editor
+              tdwrap.appendChild(createCppEditorPanel(t.id, t.snippet));
             }
           }
         });
