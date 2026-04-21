@@ -330,44 +330,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fetchRSS();
 
-  // ── Photo Grid — auto-fetch from photo-proxy.php ─────────────────
-  const photoGrid = document.getElementById('photoGrid');
 
-  const buildPhotoGrid = (photos) => {
-    if (!photoGrid || !photos?.length) return;
-    photoGrid.innerHTML = '';
-    photos.forEach((photo, idx) => {
-      const div = document.createElement('div');
-      div.className = 'photo-item';
-      div.dataset.full    = photo.full;
-      div.dataset.caption = photo.caption || '';
-      if (photo.link) div.dataset.postLink = photo.link;
-      div.innerHTML = `<img src="${photo.thumb}" alt="${photo.caption || 'Photo by Goro Yeh'}" loading="lazy"/>`;
-      div.addEventListener('click', () => openLb(idx));
-      photoGrid.appendChild(div);
-    });
-  };
+  // ═══════════════════════════════════════════════════════════════════
+  // PHOTOGRAPHY GALLERY — horizontal scroll + lightbox
+  // Source priority: 1) /photography-index.php (your uploaded images)
+  //                  2) /photo-proxy.php (WordPress media fallback)
+  // ═══════════════════════════════════════════════════════════════════
+  const galleryTrack  = document.getElementById('galleryTrack');
+  const galleryWrap   = document.getElementById('galleryWrap');
+  const galleryDots   = document.getElementById('galleryDots');
+  const galleryPrev   = document.getElementById('galleryPrev');
+  const galleryNext   = document.getElementById('galleryNext');
 
-  const fetchPhotos = async () => {
-    try {
-      const res  = await fetch(`/photo-proxy.php?count=12&_=${Date.now()}`);
-      const data = await res.json();
-      if (data.status === 'ok' && data.photos?.length) {
-        buildPhotoGrid(data.photos);
-        // Re-observe new photo items for fade-in
-        photoGrid.querySelectorAll('.photo-item').forEach(el => {
-          el.classList.add('fade-in');
-          observer.observe(el);
-        });
-      }
-    } catch (err) {
-      console.warn('Photo fetch failed, keeping static grid.', err);
-    }
-  };
-
-  fetchPhotos();
-
-  // ── Lightbox ─────────────────────────────────────────────────────
+  // Lightbox elements (same HTML structure as before)
   const lb        = document.getElementById('lightbox');
   const lbImg     = document.getElementById('lbImg');
   const lbSpinner = document.getElementById('lbSpinner');
@@ -375,17 +350,123 @@ document.addEventListener('DOMContentLoaded', () => {
   const lbLink    = document.getElementById('lbInstaLink');
   const lbCounter = document.getElementById('lbCounter');
 
-  let lbItems = [];
-  let lbIndex = 0;
+  let galleryPhotos = [];   // master array
+  let galleryIdx    = 0;    // current scroll position (leftmost visible card)
+  let lbIndex       = 0;    // current lightbox index
+  let isDragging    = false;
+  let dragStartX    = 0;
+  let dragDeltaX    = 0;
 
-  const rebuildLbItems = () => {
-    lbItems = Array.from(document.querySelectorAll('.photo-item'));
+  // ── How many cards visible depends on viewport ──────────────────────
+  const visibleCount = () => {
+    const w = window.innerWidth;
+    if (w < 600) return 2;
+    if (w < 900) return 3;
+    return 4;
   };
 
+  // ── Build gallery cards from photos array ────────────────────────────
+  const buildGallery = (photos) => {
+    if (!galleryTrack || !photos?.length) return;
+    galleryPhotos = photos;
+    galleryTrack.innerHTML = '';
+
+    photos.forEach((photo, i) => {
+      const card = document.createElement('div');
+      card.className = 'gallery-card';
+      card.innerHTML = `
+        <img src="${photo.thumb}" alt="${photo.caption || 'Photo by Goro Yeh'}" loading="lazy"/>
+        <div class="gc-overlay"><span class="gc-caption">${photo.caption || ''}</span></div>`;
+      card.addEventListener('click', () => {
+        if (Math.abs(dragDeltaX) < 6) openLb(i);
+      });
+      // Fade-in on scroll
+      card.classList.add('fade-in');
+      observer.observe(card);
+      galleryTrack.appendChild(card);
+    });
+
+    buildDots();
+    goTo(0);
+  };
+
+  // ── Scroll position ──────────────────────────────────────────────────
+  const cardWidth = () => {
+    const first = galleryTrack?.firstElementChild;
+    if (!first) return 0;
+    return first.offsetWidth + 10; // card + gap
+  };
+
+  const maxIdx = () => Math.max(0, galleryPhotos.length - visibleCount());
+
+  const goTo = (n) => {
+    galleryIdx = Math.max(0, Math.min(n, maxIdx()));
+    galleryTrack.style.transform = `translateX(-${galleryIdx * cardWidth()}px)`;
+    // Update dots
+    galleryDots?.querySelectorAll('.gallery-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === galleryIdx);
+    });
+  };
+
+  // ── Dot navigation ───────────────────────────────────────────────────
+  const buildDots = () => {
+    if (!galleryDots) return;
+    galleryDots.innerHTML = '';
+    const total = maxIdx() + 1;
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Go to photo ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      galleryDots.appendChild(dot);
+    }
+  };
+
+  // ── Arrow buttons ────────────────────────────────────────────────────
+  galleryPrev?.addEventListener('click', () => goTo(galleryIdx - 1));
+  galleryNext?.addEventListener('click', () => goTo(galleryIdx + 1));
+
+  // ── Mouse drag ───────────────────────────────────────────────────────
+  galleryWrap?.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragDeltaX = 0;
+    galleryTrack.style.transition = 'none';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    dragDeltaX = e.clientX - dragStartX;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    galleryTrack.style.transition = '';
+    if (dragDeltaX < -50)      goTo(galleryIdx + 1);
+    else if (dragDeltaX > 50)  goTo(galleryIdx - 1);
+    else                        goTo(galleryIdx);
+  });
+
+  // ── Touch swipe ──────────────────────────────────────────────────────
+  let touchStartX = 0;
+  galleryWrap?.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  galleryWrap?.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -40)      goTo(galleryIdx + 1);
+    else if (dx > 40)  goTo(galleryIdx - 1);
+  });
+
+  // Recalculate on resize
+  window.addEventListener('resize', () => {
+    buildDots();
+    goTo(Math.min(galleryIdx, maxIdx()));
+  });
+
+  // ── Lightbox ─────────────────────────────────────────────────────────
   const openLb = (idx) => {
-    rebuildLbItems();
     lbIndex = idx;
-    showLbSlide(lbIndex);
+    showLbSlide(idx);
     lb.classList.add('active');
     lb.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -400,66 +481,81 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const showLbSlide = (idx) => {
-    const item    = lbItems[idx];
-    const fullSrc = item.dataset.full    || item.querySelector('img')?.src || '';
-    const caption = item.dataset.caption || '';
-    const postLink = item.dataset.postLink || '';
+    const photo = galleryPhotos[idx];
+    if (!photo) return;
 
     lbImg.classList.remove('loaded');
-    lbSpinner.classList.remove('hidden');
+    lbSpinner?.classList.remove('hidden');
 
     const tmp = new Image();
     tmp.onload = () => {
-      lbImg.src = fullSrc;
-      lbImg.alt = caption;
+      lbImg.src = photo.full;
+      lbImg.alt = photo.caption || '';
       lbImg.classList.add('loaded');
-      lbSpinner.classList.add('hidden');
+      lbSpinner?.classList.add('hidden');
     };
     tmp.onerror = () => {
-      lbImg.src = item.querySelector('img')?.src || '';
+      lbImg.src = photo.thumb;
       lbImg.classList.add('loaded');
-      lbSpinner.classList.add('hidden');
+      lbSpinner?.classList.add('hidden');
     };
-    tmp.src = fullSrc;
+    tmp.src = photo.full;
 
-    lbCaption.textContent = caption;
-    lbCounter.textContent = `${idx + 1} / ${lbItems.length}`;
+    if (lbCaption) lbCaption.textContent = photo.caption || '';
+    if (lbCounter) lbCounter.textContent = `${idx + 1} / ${galleryPhotos.length}`;
 
-    if (postLink) {
-      lbLink.href = postLink;
-      lbLink.textContent = 'View post →';
-      lbLink.classList.add('visible');
-    } else {
-      lbLink.href = 'https://www.instagram.com/goroyeh56.photography/';
-      lbLink.textContent = 'View on Instagram →';
+    if (lbLink) {
+      lbLink.href = photo.link || 'https://www.instagram.com/goroyeh56.photography/';
+      lbLink.textContent = photo.link ? 'View on Instagram →' : 'Follow @goroyeh56.photography →';
       lbLink.classList.add('visible');
     }
   };
 
   document.getElementById('lbClose')?.addEventListener('click', closeLb);
   document.getElementById('lbPrev')?.addEventListener('click', () => {
-    rebuildLbItems();
-    lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length;
+    lbIndex = (lbIndex - 1 + galleryPhotos.length) % galleryPhotos.length;
     showLbSlide(lbIndex);
   });
   document.getElementById('lbNext')?.addEventListener('click', () => {
-    rebuildLbItems();
-    lbIndex = (lbIndex + 1) % lbItems.length;
+    lbIndex = (lbIndex + 1) % galleryPhotos.length;
     showLbSlide(lbIndex);
   });
-
   lb?.addEventListener('click', (e) => { if (e.target === lb) closeLb(); });
-
   document.addEventListener('keydown', (e) => {
     if (!lb?.classList.contains('active')) return;
-    if (e.key === 'Escape')      { closeLb(); return; }
-    if (e.key === 'ArrowLeft')   { rebuildLbItems(); lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length; showLbSlide(lbIndex); }
-    if (e.key === 'ArrowRight')  { rebuildLbItems(); lbIndex = (lbIndex + 1) % lbItems.length; showLbSlide(lbIndex); }
+    if (e.key === 'Escape')     { closeLb(); return; }
+    if (e.key === 'ArrowLeft')  { lbIndex = (lbIndex - 1 + galleryPhotos.length) % galleryPhotos.length; showLbSlide(lbIndex); }
+    if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % galleryPhotos.length; showLbSlide(lbIndex); }
   });
 
-  // Also attach click to any static photo-items already in HTML
-  document.querySelectorAll('.photo-item').forEach((item, idx) => {
-    item.addEventListener('click', () => openLb(idx));
-  });
+  // ── Photo source: your uploads first, WP proxy fallback ─────────────
+  const fetchPhotos = async () => {
+    // 1. Try your manually uploaded photos in /photography/
+    try {
+      const res  = await fetch(`/photography-index.php?_=${Date.now()}`);
+      const data = await res.json();
+      if (data.status === 'ok' && data.photos?.length) {
+        buildGallery(data.photos);
+        return; // ✓ done
+      }
+    } catch (e) {
+      console.info('photography-index.php not available, trying proxy…');
+    }
+
+    // 2. Fallback: WordPress media via photo-proxy.php
+    try {
+      const res  = await fetch(`/photo-proxy.php?count=12&_=${Date.now()}`);
+      const data = await res.json();
+      if (data.status === 'ok' && data.photos?.length) {
+        buildGallery(data.photos);
+        return;
+      }
+    } catch (e) {
+      console.warn('Both photo sources failed.', e);
+    }
+    // If both fail, skeletons stay visible (no crash)
+  };
+
+  fetchPhotos();
 
 });

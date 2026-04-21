@@ -129,6 +129,7 @@
       <p class="section-eyebrow center">THROUGH MY LENS</p>
       <h2 class="section-title center">Through My Lens</h2>
       <p class="section-sub center">I love to capture beautiful moments in life through my camera — landscapes, streets, and beautiful people.</p>
+
       <div class="insta-profile">
         <img src="https://i0.wp.com/goroyeh56.com/wp-content/uploads/2025/10/NorthStarPilotHeadshot.png?fit=60%2C60&ssl=1" alt="@goroyeh56.photography" class="insta-avatar"/>
         <div>
@@ -136,19 +137,32 @@
           <span>Landscapes, streets &amp; beautiful people</span>
         </div>
       </div>
-      <div class="photo-grid" id="photoGrid">
-        <!-- Auto-populated by photo-proxy.php via main.js -->
-        <div class="photo-item photo-skeleton"></div>
-        <div class="photo-item photo-skeleton"></div>
-        <div class="photo-item photo-skeleton"></div>
-        <div class="photo-item photo-skeleton"></div>
-        <div class="photo-item photo-skeleton"></div>
-        <div class="photo-item photo-skeleton"></div>
-        <div class="photo-item photo-skeleton"></div>
-        <div class="photo-item photo-skeleton"></div>
+
+      <!-- SCROLL GALLERY -->
+      <div class="gallery-outer">
+        <button class="gallery-nav gallery-prev" id="galleryPrev" aria-label="Previous">&#8592;</button>
+        <div class="gallery-track-wrap" id="galleryWrap">
+          <div class="gallery-track" id="galleryTrack">
+            <!-- Populated by photo-proxy.php via main.js -->
+            <div class="gallery-card gallery-skeleton"></div>
+            <div class="gallery-card gallery-skeleton"></div>
+            <div class="gallery-card gallery-skeleton"></div>
+            <div class="gallery-card gallery-skeleton"></div>
+            <div class="gallery-card gallery-skeleton"></div>
+            <div class="gallery-card gallery-skeleton"></div>
+            <div class="gallery-card gallery-skeleton"></div>
+            <div class="gallery-card gallery-skeleton"></div>
+          </div>
+        </div>
+        <button class="gallery-nav gallery-next" id="galleryNext" aria-label="Next">&#8594;</button>
       </div>
-      <div class="center" style="margin-top:2.5rem">
-        <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" class="btn btn-outline">View on Instagram →</a>
+      <div class="gallery-dots" id="galleryDots"></div>
+
+      <div class="center" style="margin-top:2rem">
+        <a href="https://www.instagram.com/goroyeh56.photography/" target="_blank" class="btn btn-outline">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          View on Instagram →
+        </a>
       </div>
     </div>
   </section>
